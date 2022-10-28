@@ -8,4 +8,4 @@
 - [ ] Add background sevices:
   - [ ] Check and send contract deadline SMS.
   - [ ] Check and send payment deadline SMS.
-- [ ] Upload a backup copy to the Google drive.
+  - [ ] Upload a backup copy to the Google drive.
