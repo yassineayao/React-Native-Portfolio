@@ -38,7 +38,10 @@ const VehiclesListScreen = () => {
       </TouchableOpacity>
       <AddClient
         modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
+        setModalVisible={(value: boolean) => {
+          onRefresh();
+          setModalVisible(value);
+        }}
       />
     </VehiclesList>
   );

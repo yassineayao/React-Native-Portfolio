@@ -1,7 +1,7 @@
 # SMS Reminder
 
 # TODO
-- [ ] Add guiding msgs(incorrect input error, Toast msgs, ...)
+- [x] Add guiding msgs(incorrect input error, Toast msgs, ...)
 - [ ] Complete settings:
   - [ ] Add languages switcher
   - [ ] Add Google drive backup action

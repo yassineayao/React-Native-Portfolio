@@ -23,27 +23,41 @@ import { locale } from "../constants/settings";
 
 const db = Database.getInstance();
 
+const defaultIsValid = {
+  id: true,
+  client: {
+    name: true,
+    phone: true,
+  },
+  gaurantor: {
+    name: true,
+    phone: true,
+  },
+};
+
+const defaultVehicle = {
+  id: "",
+  name: "",
+  deadline: new Date(),
+  client: {
+    name: "",
+    phone: "",
+  },
+  gaurantor: {
+    name: "",
+    phone: "",
+  },
+  payment: {
+    price: "0.0",
+    deadline: new Date(),
+  },
+};
+
 const AddClient = (prop: {
   modalVisible: boolean;
   setModalVisible: Function;
 }) => {
-  const [vehicle, setVehicle] = useState<Vehicle>({
-    id: "",
-    name: "",
-    deadline: new Date(),
-    client: {
-      name: "",
-      phone: "",
-    },
-    gaurantor: {
-      name: "",
-      phone: "",
-    },
-    payment: {
-      price: "0.0",
-      deadline: new Date(),
-    },
-  });
+  const [vehicle, setVehicle] = useState<Vehicle>(defaultVehicle);
   const [gaurantors, setGaurantors] = useState<Gaurantor[]>([]);
   const [edit, setEdit] = useState({
     deadline: false,
@@ -52,6 +66,7 @@ const AddClient = (prop: {
     isRemain: false,
     isRemainDeadline: false,
   });
+  const [isValid, setIsValid] = useState({ ...defaultIsValid });
 
   useEffect(() => {
     db.getAllGaurantors(setGaurantors);
@@ -90,14 +105,25 @@ const AddClient = (prop: {
                 placeholder="J234898"
                 className="border border-gray-300 rounded-md p-2"
                 value={vehicle.id}
-                onChangeText={(value) =>
+                onChangeText={(value) => {
+                  setIsValid({
+                    ...isValid,
+                    id: value.length > 0,
+                  });
                   setVehicle({
                     ...vehicle,
                     id: value,
-                  })
-                }
+                  });
+                }}
               />
             </View>
+            {!isValid.id ? (
+              <Text className="text-center text-red-500 text-xs pt-1">
+                {i18n.t("empty_field_error")}
+              </Text>
+            ) : (
+              <></>
+            )}
             <View className="mt-2">
               <Text className="mb-1">{i18n.t("type")}</Text>
               <TextInput
@@ -128,13 +154,27 @@ const AddClient = (prop: {
                 placeholder={i18n.t("client_name")}
                 className="border border-gray-300 rounded-md p-2"
                 value={vehicle.client.name}
-                onChangeText={(value) =>
+                onChangeText={(value) => {
+                  setIsValid({
+                    ...isValid,
+                    client: {
+                      ...isValid.client,
+                      name: value.length > 0,
+                    },
+                  });
                   setVehicle({
                     ...vehicle,
                     client: { ...vehicle.client, name: value },
-                  })
-                }
+                  });
+                }}
               />
+              {!isValid.client.name ? (
+                <Text className="text-center text-red-500 text-xs pt-1">
+                  {i18n.t("empty_field_error")}
+                </Text>
+              ) : (
+                <></>
+              )}
             </View>
 
             <View className="mt-2">
@@ -147,14 +187,28 @@ const AddClient = (prop: {
                 placeholder="0612345678"
                 className="border border-gray-300 rounded-md p-2"
                 value={vehicle.client.phone}
-                onChangeText={(value) =>
+                onChangeText={(value) => {
                   // TODO: Check the phone validation in typing time
+                  setIsValid({
+                    ...isValid,
+                    client: {
+                      ...isValid.client,
+                      phone: value.length > 0,
+                    },
+                  });
                   setVehicle({
                     ...vehicle,
                     client: { ...vehicle.client, phone: value },
-                  })
-                }
+                  });
+                }}
               />
+              {!isValid.client.phone ? (
+                <Text className="text-center text-red-500 text-xs pt-1">
+                  {i18n.t("phone_error")}
+                </Text>
+              ) : (
+                <></>
+              )}
             </View>
           </View>
 
@@ -304,13 +358,27 @@ const AddClient = (prop: {
                         placeholder={i18n.t("client_name")}
                         className="border border-gray-300 rounded-md p-2"
                         value={vehicle.gaurantor.name}
-                        onChangeText={(value) =>
+                        onChangeText={(value) => {
+                          setIsValid({
+                            ...isValid,
+                            gaurantor: {
+                              ...isValid.gaurantor,
+                              name: value.length > 0,
+                            },
+                          });
                           setVehicle({
                             ...vehicle,
                             gaurantor: { ...vehicle.gaurantor, name: value },
-                          })
-                        }
+                          });
+                        }}
                       />
+                      {!isValid.gaurantor.name ? (
+                        <Text className="text-center text-red-500 text-xs pt-1">
+                          {i18n.t("empty_field_error")}
+                        </Text>
+                      ) : (
+                        <></>
+                      )}
                     </View>
 
                     <View className="mt-2">
@@ -323,14 +391,28 @@ const AddClient = (prop: {
                         placeholder="0612345678"
                         className="border border-gray-300 rounded-md p-2"
                         value={vehicle.gaurantor.phone}
-                        onChangeText={(value) =>
+                        onChangeText={(value) => {
                           // TODO: Check the phone validation in typing time
+                          setIsValid({
+                            ...isValid,
+                            gaurantor: {
+                              ...isValid.gaurantor,
+                              phone: value.length > 0,
+                            },
+                          });
                           setVehicle({
                             ...vehicle,
                             gaurantor: { ...vehicle.gaurantor, phone: value },
-                          })
-                        }
+                          });
+                        }}
                       />
+                      {!isValid.gaurantor.phone ? (
+                        <Text className="text-center text-red-500 text-xs pt-1">
+                          {i18n.t("phone_error")}
+                        </Text>
+                      ) : (
+                        <></>
+                      )}
                     </View>
                   </View>
                 ) : (
@@ -386,15 +468,49 @@ const AddClient = (prop: {
         <TouchableOpacity
           className="p-3 rounded-md bg-primary"
           onPress={() => {
-            prop.setModalVisible(!prop.modalVisible);
-            db.addVehicle(vehicle);
+            let valid = true;
+            const _isValid = { ...defaultIsValid };
+            if (!vehicle.id.length) {
+              _isValid.id = false;
+              valid = false;
+            }
+            if (!vehicle.client.name.length) {
+              _isValid.client.name = false;
+              valid = false;
+            }
+            if (!vehicle.client.phone.length) {
+              _isValid.client.phone = false;
+              valid = false;
+            }
+            if (edit.isNewGaurantor) {
+              if (!vehicle.gaurantor.name.length) {
+                _isValid.gaurantor.name = false;
+                valid = false;
+              }
+              if (!vehicle.gaurantor.phone.length) {
+                _isValid.gaurantor.phone = false;
+                valid = false;
+              }
+            }
+            if (valid) {
+              prop.setModalVisible(false);
+              setVehicle({ ...defaultVehicle });
+              db.addVehicle(vehicle);
+            } else {
+              console.log(_isValid);
+              setIsValid({ ..._isValid });
+            }
           }}
         >
           <Text className="text-headerBackground">{i18n.t("add")}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           className="p-3 rounded-md border border-gray-300 mx-2"
-          onPress={() => prop.setModalVisible(!prop.modalVisible)}
+          onPress={() => {
+            setVehicle({ ...defaultVehicle });
+            setIsValid({ ...defaultIsValid });
+            prop.setModalVisible(false);
+          }}
         >
           <Text className="text-primary">{i18n.t("cancel")}</Text>
         </TouchableOpacity>

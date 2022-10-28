@@ -41,12 +41,12 @@ const DetailsScreen = () => {
       isNewGaurantor: false,
     },
   });
-  const [isValide, setIsValide] = useState({
+  const [isValid, setIsValid] = useState({
     client: {
       name: true,
       phone: true,
     },
-    gaurantors: {
+    gaurantor: {
       name: true,
       phone: true,
     },
@@ -167,22 +167,13 @@ const DetailsScreen = () => {
                 placeholder="Vehicle type"
                 className="text-center border flex-1 mx-4 rounded-full border-gray-400 py-1"
                 onChangeText={(value) => {
-                  if (value.length === 0)
-                    setIsValide({
-                      ...isValide,
-                      client: {
-                        ...isValide.client,
-                        name: false,
-                      },
-                    });
-                  else
-                    setIsValide({
-                      ...isValide,
-                      client: {
-                        ...isValide.client,
-                        name: true,
-                      },
-                    });
+                  setIsValid({
+                    ...isValid,
+                    client: {
+                      ...isValid.client,
+                      name: value.length > 0,
+                    },
+                  });
                   setVehicle({
                     ...vehicle,
                     client: {
@@ -198,7 +189,7 @@ const DetailsScreen = () => {
             <TouchableOpacity
               className="px-2"
               onPress={() => {
-                if (isValide.client.name) toggleEdit("clientName");
+                if (isValid.client.name) toggleEdit("clientName");
               }}
             >
               {edit.client.name ? (
@@ -224,7 +215,7 @@ const DetailsScreen = () => {
               )}
             </TouchableOpacity>
           </View>
-          {!isValide.client.name ? (
+          {!isValid.client.name ? (
             <Text className="text-center text-red-500 text-xs pb-2">
               {i18n.t("empty_field_error")}
             </Text>
@@ -247,22 +238,13 @@ const DetailsScreen = () => {
                 className="text-center border flex-1 mx-4 rounded-full border-gray-400 py-1"
                 onChangeText={(value) => {
                   // TODO: Check the validation of the phone number
-                  if (value.length === 0)
-                    setIsValide({
-                      ...isValide,
-                      client: {
-                        ...isValide.client,
-                        phone: false,
-                      },
-                    });
-                  else
-                    setIsValide({
-                      ...isValide,
-                      client: {
-                        ...isValide.client,
-                        phone: true,
-                      },
-                    });
+                  setIsValid({
+                    ...isValid,
+                    client: {
+                      ...isValid.client,
+                      phone: value.length > 0,
+                    },
+                  });
                   setVehicle({
                     ...vehicle,
                     client: {
@@ -278,7 +260,7 @@ const DetailsScreen = () => {
             <TouchableOpacity
               className="px-2"
               onPress={() => {
-                if (isValide.client.phone) toggleEdit("clientPhone");
+                if (isValid.client.phone) toggleEdit("clientPhone");
               }}
             >
               {edit.client.phone ? (
@@ -304,7 +286,7 @@ const DetailsScreen = () => {
               )}
             </TouchableOpacity>
           </View>
-          {!isValide.client.phone ? (
+          {!isValid.client.phone ? (
             <Text className="text-center text-red-500 text-xs pb-2">
               {i18n.t("phone_error")}
             </Text>
@@ -471,13 +453,30 @@ const DetailsScreen = () => {
                     placeholder={i18n.t("client_name")}
                     className="border border-gray-300 rounded-md p-2"
                     value={vehicle?.gaurantor.name}
-                    onChangeText={(value) =>
+                    onChangeText={(value) => {
+                      setIsValid({
+                        ...isValid,
+                        gaurantor: {
+                          ...isValid.gaurantor,
+                          name: value.length > 0,
+                        },
+                      });
                       setVehicle({
                         ...vehicle,
-                        gaurantor: { ...vehicle?.gaurantor, name: value },
-                      } as Vehicle)
-                    }
+                        gaurantor: {
+                          ...vehicle?.gaurantor,
+                          name: value,
+                        },
+                      } as Vehicle);
+                    }}
                   />
+                  {!isValid.gaurantor.name ? (
+                    <Text className="text-center text-red-500 text-xs pt-1">
+                      {i18n.t("empty_field_error")}
+                    </Text>
+                  ) : (
+                    <></>
+                  )}
                 </View>
 
                 <View className="mt-2">
@@ -490,20 +489,47 @@ const DetailsScreen = () => {
                     placeholder="0612345678"
                     className="border border-gray-300 rounded-md p-2"
                     value={vehicle?.gaurantor.phone}
-                    onChangeText={(value) =>
+                    onChangeText={(value) => {
                       // TODO: Check the phone validation in typing time
+                      setIsValid({
+                        ...isValid,
+                        gaurantor: {
+                          ...isValid.gaurantor,
+                          phone: value.length > 0,
+                        },
+                      });
                       setVehicle({
                         ...vehicle,
                         gaurantor: { ...vehicle?.gaurantor, phone: value },
-                      } as Vehicle)
-                    }
+                      } as Vehicle);
+                    }}
                   />
+                  {!isValid.gaurantor.phone ? (
+                    <Text className="text-center text-red-500 text-xs pt-1">
+                      {i18n.t("phone_error")}
+                    </Text>
+                  ) : (
+                    <></>
+                  )}
                 </View>
                 <View className="mt-2">
                   <Button
                     title={i18n.t("add")}
                     color={customTheme.colors.headerBackground}
                     onPress={() => {
+                      setIsValid({
+                        ...isValid,
+                        gaurantor: {
+                          name:
+                            vehicle && vehicle?.gaurantor.name.length > 0
+                              ? true
+                              : false,
+                          phone:
+                            vehicle && vehicle?.gaurantor.phone.length > 0
+                              ? true
+                              : false,
+                        },
+                      });
                       if (
                         vehicle?.gaurantor.name.length &&
                         vehicle?.gaurantor.phone.length
@@ -548,7 +574,6 @@ const DetailsScreen = () => {
                 <TouchableOpacity
                   className="items-center mt-3"
                   onPress={() => {
-                    // toggleEdit("isNewGaurantor");
                     setEdit({
                       ...edit,
                       gaurantor: {
