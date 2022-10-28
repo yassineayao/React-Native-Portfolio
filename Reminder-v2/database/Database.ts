@@ -190,7 +190,6 @@ class _Database {
         [],
         (tx, res) => {
           let count: number = -1;
-          console.log("Count:", res.rows);
           if (res.rows.length) {
             const row = res.rows.item(0);
             count = row["count"];
@@ -238,7 +237,6 @@ class _Database {
             vehicles = vehicles.sort((a, b) => {
               return a.deadline.getTime() - b.deadline.getTime();
             });
-            console.log("all vehicles: ", vehicles);
             callback(vehicles);
           },
           (error) => {
@@ -378,7 +376,6 @@ class _Database {
           [],
           (tx, res) => {
             const row = res.rows.item(0);
-            console.log("row:", row);
             row["deadline"] = new Date(row.deadline);
             row["remain_deadline"] = new Date(row.remain_deadline);
             const vehicle: Vehicle = {
@@ -398,14 +395,12 @@ class _Database {
                 price: row["remain_price"],
               },
             };
-            console.log("vehicle", vehicle);
 
             if (vehicle.gaurantor.phone.length) {
               tx.executeSql(
                 `SELECT * FROM Gaurantors WHERE gaurantor_phone="${vehicle.gaurantor.phone}"`,
                 [],
                 (tx, res) => {
-                  console.log("res.rows: ", res.rows);
                   if (res.rows.length > 0) {
                     const row = res.rows.item(0);
                     vehicle.gaurantor.name = row["gaurantor_name"];

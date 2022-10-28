@@ -9,22 +9,13 @@ import SettingsScreen from "./src/screens/SettingsScreen";
 import DetailsScreen from "./src/screens/DetailsScreen";
 import i18n from "./src/services/i18n";
 
-import { useEffect } from "react";
-import { documentDirectory, readDirectoryAsync } from "expo-file-system";
 import { Database } from "./database/Database";
 
 // Initialize the database instance.
 const db = Database.getInstance();
 const Stack = createNativeStackNavigator();
 
-const getPermissions = async () => {
-  console.log(await readDirectoryAsync(documentDirectory + "SQLite/"));
-};
-
 export default function App() {
-  useEffect(() => {
-    getPermissions();
-  }, []);
   return (
     <View className="flex-1">
       <StatusBar

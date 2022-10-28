@@ -54,9 +54,7 @@ const DetailsScreen = () => {
   const navigations = useNavigation();
   const route: Route = useRoute();
   useLayoutEffect(() => {
-    console.log("route: ", route);
     db.getAllGaurantors((gaurantors: Gaurantor[]) => {
-      console.log("Gaurantors: ", gaurantors);
       setGaurantors(gaurantors);
     });
     db.getVehicle({ id: route.params?.id || "" }, (vehicle: Vehicle) => {

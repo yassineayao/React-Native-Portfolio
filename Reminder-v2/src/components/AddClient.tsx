@@ -57,10 +57,6 @@ const AddClient = (prop: {
     db.getAllGaurantors(setGaurantors);
   }, []);
 
-  useEffect(() => {
-    console.log(gaurantors);
-  }, [gaurantors]);
-
   const toggleEdit = (field: keyof typeof edit) => {
     setEdit({ ...edit, [field]: !edit[field] });
   };
@@ -347,9 +343,6 @@ const AddClient = (prop: {
                       value={{
                         id: vehicle.gaurantor.phone,
                         item: vehicle.gaurantor.name,
-                      }}
-                      onTapClose={(value: any) => {
-                        console.log(value);
                       }}
                       onChange={(value: { id: string; item: string }) => {
                         setVehicle({
