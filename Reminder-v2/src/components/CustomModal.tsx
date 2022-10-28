@@ -1,19 +1,9 @@
 import { View, Modal, NativeSyntheticEvent } from "react-native";
 import React from "react";
-import { customTheme } from "../constants/theme";
 import i18n from "../services/i18n";
 
 const ModalHeader = (prop: { children: JSX.Element | JSX.Element[] }) => {
-  return (
-    <View
-      className="bg-blue-700"
-      style={{
-        backgroundColor: customTheme.colors.headerBackground,
-      }}
-    >
-      {prop.children}
-    </View>
-  );
+  return <View className="bg-headerBackground">{prop.children}</View>;
 };
 
 const ModalBody = (prop: {
@@ -28,10 +18,7 @@ const ModalFooter = (prop: { children: JSX.Element | JSX.Element[] }) => {
     <View
       className={`${
         i18n.locale === "ar" ? "flex-row" : "flex-row-reverse"
-      } p-3 w-full`}
-      style={{
-        backgroundColor: customTheme.colors.headerBackground,
-      }}
+      } p-3 w-full bg-headerBackground`}
     >
       {prop.children}
     </View>

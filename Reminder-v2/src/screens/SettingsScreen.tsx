@@ -65,9 +65,7 @@ const SettingsScreen = () => {
                 : customTheme.colors.disable
             }
             value={settings.enabledSMS}
-            style={{
-              height: 20,
-            }}
+            className="h-20"
             onValueChange={(value: boolean) => {
               setSettings({ ...settings, enabledSMS: value });
             }}
@@ -82,11 +80,9 @@ const SettingsScreen = () => {
       >
         <Text>{i18n.t("time")}</Text>
         <TouchableOpacity
+          className="flex-1"
           onPress={() => {
             setEditSendingTime(true);
-          }}
-          style={{
-            flex: 1,
           }}
         >
           <TextInput
@@ -229,9 +225,7 @@ const SettingsScreen = () => {
               onValueChange={(value) =>
                 setSettings({ ...settings, enabledBackup: value })
               }
-              style={{
-                height: 20,
-              }}
+              className="h-20"
             />
           </View>
         </View>

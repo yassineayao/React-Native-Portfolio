@@ -95,12 +95,7 @@ const DetailsScreen = () => {
   };
 
   return (
-    <ScrollView
-      className="flex-1 pb-20"
-      style={{
-        backgroundColor: customTheme.colors.containerBackground,
-      }}
-    >
+    <ScrollView className="flex-1 pb-20 bg-containerBackground">
       <CardContainer>
         <Text className="font-bold text-3xl text-center">
           {i18n.t("vehicle")}

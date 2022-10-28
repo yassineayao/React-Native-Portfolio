@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import Checkbox from "expo-checkbox";
 import SelectBox from "react-native-multi-selectbox";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {
   CustomModal,
@@ -75,12 +75,7 @@ const AddClient = (prop: {
     >
       <ModalHeader>
         <View className="p-3">
-          <Text
-            className="text-lg"
-            style={{ color: customTheme.colors.primary }}
-          >
-            {i18n.t("new_vehicle")}
-          </Text>
+          <Text className="text-lg text-primary">{i18n.t("new_vehicle")}</Text>
         </View>
       </ModalHeader>
       <ModalBody _className="flex-1 p-3">
@@ -396,34 +391,19 @@ const AddClient = (prop: {
       </ModalBody>
       <ModalFooter>
         <TouchableOpacity
-          className="p-3 rounded-md"
-          style={{
-            backgroundColor: customTheme.colors.primary,
-          }}
+          className="p-3 rounded-md bg-primary"
           onPress={() => {
             prop.setModalVisible(!prop.modalVisible);
             db.addVehicle(vehicle);
           }}
         >
-          <Text
-            style={{
-              color: customTheme.colors.headerBackground,
-            }}
-          >
-            {i18n.t("add")}
-          </Text>
+          <Text className="text-headerBackground">{i18n.t("add")}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           className="p-3 rounded-md border border-gray-300 mx-2"
           onPress={() => prop.setModalVisible(!prop.modalVisible)}
         >
-          <Text
-            style={{
-              color: customTheme.colors.primary,
-            }}
-          >
-            {i18n.t("cancel")}
-          </Text>
+          <Text className="text-primary">{i18n.t("cancel")}</Text>
         </TouchableOpacity>
       </ModalFooter>
     </CustomModal>

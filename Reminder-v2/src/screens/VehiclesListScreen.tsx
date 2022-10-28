@@ -31,10 +31,7 @@ const VehiclesListScreen = () => {
   return (
     <VehiclesList data={vehicles} refreshing={refreshing} onRefresh={onRefresh}>
       <TouchableOpacity
-        className="absolute p-3 rounded-full shadow shadow-black bottom-1 right-1"
-        style={{
-          backgroundColor: customTheme.colors.primary,
-        }}
+        className="absolute p-3 rounded-full shadow shadow-black bottom-1 right-1 bg-primary"
         onPress={() => setModalVisible(true)}
       >
         <PlusIcon size={30} color={customTheme.colors.headerBackground} />

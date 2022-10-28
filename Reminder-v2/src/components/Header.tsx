@@ -37,12 +37,9 @@ const Header = () => {
 
   return (
     <View
-      style={{
-        backgroundColor: customTheme.colors.headerBackground,
-      }}
       className={`${
         i18n.locale === "ar" ? "flex-row-reverse" : "flex-row"
-      } justify-between items-center px-2`}
+      } justify-between items-center px-2 bg-headerBackground`}
     >
       <TouchableOpacity
         onPress={() => setModalVisible(true)}
@@ -91,13 +88,7 @@ const Header = () => {
             className="border border-gray-400 rounded-md p-2 px-3"
             onPress={() => setModalVisible(!modalVisible)}
           >
-            <Text
-              style={{
-                color: customTheme.colors.primary,
-              }}
-            >
-              {i18n.t("ok")}
-            </Text>
+            <Text className="text-primary">{i18n.t("ok")}</Text>
           </TouchableOpacity>
         </ModalFooter>
       </CustomModal>

@@ -1,7 +1,6 @@
 import { View, FlatList } from "react-native";
 import React from "react";
 import ListItemCard from "../components/ListItemCard";
-import { customTheme } from "../constants/theme";
 import { Vehicle } from "../types";
 
 const renderItem = (prop: { item: Vehicle; callBack?: Function }) => {
@@ -16,12 +15,7 @@ const VehiclesList = (prop: {
   callBack?: Function;
 }) => {
   return (
-    <View
-      style={{
-        backgroundColor: customTheme.colors.containerBackground,
-        flex: 1,
-      }}
-    >
+    <View className="flex-1 bg-containerBackground">
       <FlatList
         data={prop.data}
         renderItem={({ item }) => renderItem({ item, callBack: prop.callBack })}
