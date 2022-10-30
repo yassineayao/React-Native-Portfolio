@@ -1,4 +1,4 @@
-import React, { lazy, useLayoutEffect } from "react";
+import React, { useContext, useEffect, useLayoutEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { customTheme } from "../constants/theme";
@@ -7,6 +7,7 @@ import { BackHandler } from "react-native";
 import VehiclesListScreen from "./VehiclesListScreen";
 import UnpaidListScreen from "./UnpaidListScreen";
 import Header from "../components/Header";
+import { sharedValues } from "../contexts/SharedValues";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -22,6 +23,10 @@ const HomeScreen = () => {
     );
     return _event.remove;
   }, []);
+  const context = useContext(sharedValues);
+  useEffect(() => {
+    i18n.locale = context.lang === 0 ? "ar" : "fr";
+  }, [context.lang]);
 
   return (
     <>

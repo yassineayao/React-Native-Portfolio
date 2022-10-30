@@ -1,27 +1,27 @@
 import { TouchableOpacity } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { PlusIcon } from "react-native-heroicons/outline";
 import { useFocusEffect } from "@react-navigation/native";
 import { customTheme } from "../constants/theme";
 import VehiclesList from "../components/VehiclesList";
 import { Vehicle } from "../types";
 import AddClient from "../components/AddClient";
-import { Database } from "../../database/Database";
-const db = Database.getInstance();
+import { sharedValues } from "../contexts/SharedValues";
 
 const VehiclesListScreen = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const context = useContext(sharedValues);
   const onRefresh = () => {
-    db.getAllVehicles((vehicles: Vehicle[]) => {
+    context.db.getAllVehicles((vehicles: Vehicle[]) => {
       setRefreshing(true);
       setVehicles(vehicles);
       setRefreshing(false);
     });
   };
   useEffect(() => {
-    db.getAllVehicles(setVehicles);
+    context.db.getAllVehicles(setVehicles);
   }, []);
   useFocusEffect(
     useCallback(() => {

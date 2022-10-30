@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import Checkbox from "expo-checkbox";
 import SelectBox from "react-native-multi-selectbox";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {
   CustomModal,
@@ -18,10 +18,8 @@ import {
 import i18n from "../services/i18n";
 import { customTheme } from "../constants/theme";
 import { Gaurantor, Vehicle } from "../types";
-import { Database } from "../../database/Database";
 import { locale } from "../constants/settings";
-
-const db = Database.getInstance();
+import { sharedValues } from "../contexts/SharedValues";
 
 const defaultIsValid = {
   id: true,
@@ -67,9 +65,13 @@ const AddClient = (prop: {
     isRemainDeadline: false,
   });
   const [isValid, setIsValid] = useState({ ...defaultIsValid });
+  const context = useContext(sharedValues);
+  useEffect(() => {
+    i18n.locale = context.lang === 0 ? "ar" : "fr";
+  }, [context.lang]);
 
   useEffect(() => {
-    db.getAllGaurantors(setGaurantors);
+    context.db.getAllGaurantors(setGaurantors);
   }, []);
 
   const toggleEdit = (field: keyof typeof edit) => {
@@ -495,7 +497,7 @@ const AddClient = (prop: {
             if (valid) {
               prop.setModalVisible(false);
               setVehicle({ ...defaultVehicle });
-              db.addVehicle(vehicle);
+              context.db.addVehicle(vehicle);
             } else {
               console.log(_isValid);
               setIsValid({ ..._isValid });

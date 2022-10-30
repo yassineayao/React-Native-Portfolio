@@ -7,7 +7,7 @@ import {
   Linking,
   Button,
 } from "react-native";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import {
   PencilSquareIcon,
@@ -20,10 +20,8 @@ import { customTheme } from "../constants/theme";
 import CardContainer from "../components/CardContainer";
 import i18n from "../services/i18n";
 import { Gaurantor, Route, Vehicle } from "../types";
-import { Database } from "../../database/Database";
 import { locale } from "../constants/settings";
-
-const db = Database.getInstance();
+import { sharedValues } from "../contexts/SharedValues";
 
 const DetailsScreen = () => {
   const [vehicle, setVehicle] = useState<Vehicle>();
@@ -52,12 +50,13 @@ const DetailsScreen = () => {
     },
   });
   const navigations = useNavigation();
+  const context = useContext(sharedValues);
   const route: Route = useRoute();
   useLayoutEffect(() => {
-    db.getAllGaurantors((gaurantors: Gaurantor[]) => {
+    context.db.getAllGaurantors((gaurantors: Gaurantor[]) => {
       setGaurantors(gaurantors);
     });
-    db.getVehicle({ id: route.params?.id || "" }, (vehicle: Vehicle) => {
+    context.db.getVehicle({ id: route.params?.id || "" }, (vehicle: Vehicle) => {
       setVehicle(vehicle);
       navigations.setOptions({
         title: vehicle?.client.name,
@@ -74,7 +73,7 @@ const DetailsScreen = () => {
   }, []);
 
   useEffect(() => {
-    if (vehicle) db.updateVehicle(vehicle as Vehicle);
+    if (vehicle) context.db.updateVehicle(vehicle as Vehicle);
   }, [vehicle]);
 
   const toggleEdit = (
@@ -131,7 +130,7 @@ const DetailsScreen = () => {
                 color={customTheme.colors.gray}
                 style={{
                   transform: [
-                    { rotateY: i18n.locale === "ar" ? "180deg" : "" },
+                    { rotateY: i18n.locale === "ar" ? "180deg" : "0deg" },
                   ],
                 }}
               />
@@ -141,7 +140,7 @@ const DetailsScreen = () => {
                 color={customTheme.colors.gray}
                 style={{
                   transform: [
-                    { rotateY: i18n.locale === "ar" ? "180deg" : "" },
+                    { rotateY: i18n.locale === "ar" ? "180deg" : "0deg" },
                   ],
                 }}
               />
@@ -198,7 +197,7 @@ const DetailsScreen = () => {
                   color={customTheme.colors.gray}
                   style={{
                     transform: [
-                      { rotateY: i18n.locale === "ar" ? "180deg" : "" },
+                      { rotateY: i18n.locale === "ar" ? "180deg" : "0deg" },
                     ],
                   }}
                 />
@@ -208,7 +207,7 @@ const DetailsScreen = () => {
                   color={customTheme.colors.gray}
                   style={{
                     transform: [
-                      { rotateY: i18n.locale === "ar" ? "180deg" : "" },
+                      { rotateY: i18n.locale === "ar" ? "180deg" : "0deg" },
                     ],
                   }}
                 />
@@ -269,7 +268,7 @@ const DetailsScreen = () => {
                   color={customTheme.colors.gray}
                   style={{
                     transform: [
-                      { rotateY: i18n.locale === "ar" ? "180deg" : "" },
+                      { rotateY: i18n.locale === "ar" ? "180deg" : "0deg" },
                     ],
                   }}
                 />
@@ -279,7 +278,7 @@ const DetailsScreen = () => {
                   color={customTheme.colors.gray}
                   style={{
                     transform: [
-                      { rotateY: i18n.locale === "ar" ? "180deg" : "" },
+                      { rotateY: i18n.locale === "ar" ? "180deg" : "0deg" },
                     ],
                   }}
                 />
@@ -335,7 +334,9 @@ const DetailsScreen = () => {
               size={20}
               color={customTheme.colors.gray}
               style={{
-                transform: [{ rotateY: i18n.locale === "ar" ? "180deg" : "" }],
+                transform: [
+                  { rotateY: i18n.locale === "ar" ? "180deg" : "0deg" },
+                ],
               }}
             />
           </TouchableOpacity>
@@ -389,7 +390,7 @@ const DetailsScreen = () => {
                 color={customTheme.colors.gray}
                 style={{
                   transform: [
-                    { rotateY: i18n.locale === "ar" ? "180deg" : "" },
+                    { rotateY: i18n.locale === "ar" ? "180deg" : "0deg" },
                   ],
                 }}
               />
@@ -399,7 +400,7 @@ const DetailsScreen = () => {
                 color={customTheme.colors.gray}
                 style={{
                   transform: [
-                    { rotateY: i18n.locale === "ar" ? "180deg" : "" },
+                    { rotateY: i18n.locale === "ar" ? "180deg" : "0deg" },
                   ],
                 }}
               />
@@ -431,7 +432,9 @@ const DetailsScreen = () => {
             size={20}
             color={customTheme.colors.gray}
             style={{
-              transform: [{ rotateY: i18n.locale === "ar" ? "180deg" : "" }],
+              transform: [
+                { rotateY: i18n.locale === "ar" ? "180deg" : "0deg" },
+              ],
             }}
           />
         </TouchableOpacity>
@@ -534,7 +537,7 @@ const DetailsScreen = () => {
                         vehicle?.gaurantor.name.length &&
                         vehicle?.gaurantor.phone.length
                       )
-                        db.addGaurantor(vehicle?.gaurantor as Gaurantor);
+                        context.db.addGaurantor(vehicle?.gaurantor as Gaurantor);
                     }}
                   />
                 </View>
@@ -617,7 +620,7 @@ const DetailsScreen = () => {
           color="red"
           onPress={() => {
             if (vehicle)
-              db.deleteVehicle(vehicle.id, () => {
+              context.db.deleteVehicle(vehicle.id, () => {
                 navigations.goBack();
               });
           }}

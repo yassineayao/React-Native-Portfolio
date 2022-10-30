@@ -48,9 +48,9 @@ const SettingsScreen = () => {
     >
       <Text className="font-bold text-3xl text-center">{i18n.t("sms")}</Text>
       <CardContainer
-        _className={`flex-row ${
-          i18n.locale === "ar" ? "flex-row-reverse" : ""
-        } justify-between`}
+        _className={`${
+          i18n.locale === "ar" ? "flex-row-reverse" : "flex-row"
+        } justify-between items-center`}
       >
         <Text>{i18n.t("enable")}</Text>
         <View className={`${i18n.locale === "ar" ? "rotate-180" : ""}`}>
@@ -65,10 +65,10 @@ const SettingsScreen = () => {
                 : customTheme.colors.disable
             }
             value={settings.enabledSMS}
-            className="h-20"
             onValueChange={(value: boolean) => {
               setSettings({ ...settings, enabledSMS: value });
             }}
+            className="h-5"
           />
         </View>
       </CardContainer>
@@ -205,7 +205,7 @@ const SettingsScreen = () => {
       </Text>
       <CardContainer>
         <View
-          className={`flex-1 flex-row justify-between ${
+          className={`flex-1 flex-row justify-between items-center ${
             i18n.locale == "ar" ? "flex-row-reverse" : "flex-row"
           }`}
         >
@@ -225,7 +225,7 @@ const SettingsScreen = () => {
               onValueChange={(value) =>
                 setSettings({ ...settings, enabledBackup: value })
               }
-              className="h-20"
+              className="h-5"
             />
           </View>
         </View>

@@ -1,22 +1,22 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { Database } from "../../database/Database";
 import VehiclesList from "../components/VehiclesList";
 import { Vehicle } from "../types";
+import { sharedValues } from "../contexts/SharedValues";
 
-const db = Database.getInstance();
 const UnpaidListScreen = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const context = useContext(sharedValues);
   const onRefresh = () => {
-    db.getAllVehicles((vehicles: Vehicle[]) => {
+    context.db.getAllVehicles((vehicles: Vehicle[]) => {
       setRefreshing(true);
       setVehicles(vehicles);
       setRefreshing(false);
     }, false);
   };
   useEffect(() => {
-    db.getAllVehicles(setVehicles, false);
+    context.db.getAllVehicles(setVehicles, false);
   }, []);
   useFocusEffect(
     useCallback(() => {

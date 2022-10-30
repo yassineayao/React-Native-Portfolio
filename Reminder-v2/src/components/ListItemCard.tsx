@@ -1,14 +1,19 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { PhoneIcon } from "react-native-heroicons/outline";
 import i18n from "../services/i18n";
 import { Vehicle } from "../types";
 import CardContainer from "./CardContainer";
 import { locale } from "../constants/settings";
+import { sharedValues } from "../contexts/SharedValues";
 
 const ListItemCard = (prop: { vehicle: Vehicle; callBack?: Function }) => {
   const navigations = useNavigation();
+  const context = useContext(sharedValues);
+  useEffect(() => {
+    i18n.locale = context.lang === 0 ? "ar" : "fr";
+  }, [context.lang]);
   return (
     <CardContainer>
       <TouchableOpacity

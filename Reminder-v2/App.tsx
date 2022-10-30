@@ -10,12 +10,19 @@ import DetailsScreen from "./src/screens/DetailsScreen";
 import i18n from "./src/services/i18n";
 
 import { Database } from "./database/Database";
+import { sharedValues } from "./src/contexts/SharedValues";
+import { useEffect, useState } from "react";
 
 // Initialize the database instance.
-const db = Database.getInstance();
 const Stack = createNativeStackNavigator();
+const ContextProvider = sharedValues.Provider;
 
 export default function App() {
+  const [lang, setLang] = useState(0);
+  useEffect(() => {
+    i18n.locale = lang === 0 ? "ar" : "fr";
+  }, [lang]);
+
   return (
     <View className="flex-1">
       <StatusBar
@@ -23,29 +30,31 @@ export default function App() {
         barStyle="default"
         backgroundColor={customTheme.colors.statusbar}
       />
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerTintColor: customTheme.colors.primary,
-            headerStyle: {
-              backgroundColor: customTheme.colors.headerBackground,
-            },
-            gestureEnabled: true,
-            gestureDirection: "horizontal",
-          }}
-        >
-          <Stack.Screen name="SplashScreen" component={SplashScreen} />
-          <Stack.Screen name="HomeScreen" component={HomeScreen} />
-          <Stack.Screen
-            name="SettingsScreen"
-            component={SettingsScreen}
-            options={{
-              title: i18n.t("settings"),
+      <ContextProvider value={{ db: Database.getInstance(), lang, setLang }}>
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{
+              headerTintColor: customTheme.colors.primary,
+              headerStyle: {
+                backgroundColor: customTheme.colors.headerBackground,
+              },
+              gestureEnabled: true,
+              gestureDirection: "horizontal",
             }}
-          />
-          <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+          >
+            <Stack.Screen name="SplashScreen" component={SplashScreen} />
+            <Stack.Screen name="HomeScreen" component={HomeScreen} />
+            <Stack.Screen
+              name="SettingsScreen"
+              component={SettingsScreen}
+              options={{
+                title: i18n.t("settings"),
+              }}
+            />
+            <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ContextProvider>
     </View>
   );
 }
