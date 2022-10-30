@@ -1,5 +1,5 @@
-import { View, Text, TextInput, TouchableOpacity, Modal } from "react-native";
-import React, { useEffect, useState } from "react";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
 import {
   CogIcon as SettingIcon,
   MagnifyingGlassIcon,
@@ -15,18 +15,23 @@ import {
   ModalFooter,
   ModalHeader,
 } from "./CustomModal";
-import { Database } from "../../database/Database";
+import SwitchSelector from "react-native-switch-selector";
+import { sharedValues } from "../contexts/SharedValues";
 
-const db = Database.getInstance();
+const options = [
+  { label: "ﻉ", value: "ar", accessibilityLabel: "ar" },
+  { label: "fr", value: "fr", accessibilityLabel: "fr" },
+];
 
 const Header = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const context = useContext(sharedValues);
   const navigations = useNavigation();
 
   useEffect(() => {
-    if (search.length) db.getVehiclesByClientName(search, setVehicles);
+    if (search.length) context.db.getVehiclesByClientName(search, setVehicles);
     else setVehicles([]);
   }, [search]);
 
@@ -49,13 +54,45 @@ const Header = () => {
       >
         <MagnifyingGlassIcon color={customTheme.colors.primary} />
       </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          navigations.navigate("SettingsScreen" as never);
-        }}
+      <View
+        className={`${
+          i18n.locale === "ar" ? "flex-row" : "flex-row-reverse"
+        } space-2 py-2 items-center`}
       >
-        <SettingIcon color={customTheme.colors.primary} size={30} />
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigations.navigate("SettingsScreen" as never);
+          }}
+        >
+          <SettingIcon color={customTheme.colors.primary} size={30} />
+        </TouchableOpacity>
+        <SwitchSelector
+          options={options}
+          value={context.lang}
+          initial={context.lang}
+          onPress={(value) => {
+            context.setLang(value === "ar" ? 0 : 1);
+            i18n.locale = value;
+          }}
+          hasPadding
+          bold
+          buttonColor={customTheme.colors.primary}
+          style={{
+            width: 60,
+            transform: [{ rotate: "90deg" }],
+          }}
+          textStyle={{
+            transform: [{ rotate: "-90deg" }],
+            color: customTheme.colors.primary,
+          }}
+          selectedTextStyle={{
+            transform: [{ rotate: "-90deg" }],
+            color: customTheme.colors.headerBackground,
+          }}
+          borderColor={customTheme.colors.headerBackground}
+          backgroundColor={customTheme.colors.headerBackground}
+        />
+      </View>
       <CustomModal
         visible={modalVisible}
         onRequestClose={() => {
