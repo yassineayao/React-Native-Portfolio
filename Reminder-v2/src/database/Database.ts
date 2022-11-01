@@ -1,7 +1,7 @@
 import * as FileSystem from "expo-file-system";
 import * as SQLite from "expo-sqlite";
-import { DBname, locale } from "../src/constants/settings";
-import { Count, Gaurantor, Vehicle } from "../src/types";
+import { DBname, locale } from "../constants/settings";
+import { Count, Gaurantor, Vehicle } from "../types";
 
 async function openDatabase(): Promise<SQLite.WebSQLDatabase> {
   if (
