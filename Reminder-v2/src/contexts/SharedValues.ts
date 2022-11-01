@@ -1,5 +1,5 @@
 import React from "react";
-import { Database } from "../../database/Database";
+import { Database } from "../database/Database";
 
 export const sharedValues = React.createContext({
   db: Database.getInstance(),

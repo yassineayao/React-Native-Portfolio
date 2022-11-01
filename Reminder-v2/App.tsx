@@ -9,7 +9,7 @@ import SettingsScreen from "./src/screens/SettingsScreen";
 import DetailsScreen from "./src/screens/DetailsScreen";
 import i18n from "./src/services/i18n";
 
-import { Database } from "./database/Database";
+import { Database } from "./src/database/Database";
 import { sharedValues } from "./src/contexts/SharedValues";
 import { useEffect, useState } from "react";
 
