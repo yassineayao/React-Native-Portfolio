@@ -21,7 +21,7 @@ const defaultSettings = {
   remainSmsModel: `السلام عيكم و رحمة الله تعالى و بركاته`,
   smsPeriods: [] as SelectboxListItem[],
   enabledBackup: false,
-  backupPeriods: [] as SelectboxListItem[],
+  backupPeriod: {} as SelectboxListItem,
 };
 
 export {
