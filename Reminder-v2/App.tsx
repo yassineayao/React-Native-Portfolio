@@ -13,6 +13,8 @@ import { Database } from "./src/database/Database";
 import { sharedValues } from "./src/contexts/SharedValues";
 import { useEffect, useState } from "react";
 
+import "./src/services/BackgroundJob";
+
 // Initialize the database instance.
 const Stack = createNativeStackNavigator();
 const ContextProvider = sharedValues.Provider;
