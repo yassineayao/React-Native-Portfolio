@@ -4,10 +4,8 @@
     "slug": "Reminder-v2",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./src/assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -18,16 +16,29 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "fetch",
+          "processing"
+        ],
+        "BGTaskSchedulerPermittedIdentifiers": [
+          "com.transistorsoft.fetch",
+          "com.reminder.smsautosend"
+        ]
+      },
+      "bundleIdentifier": "com.sms.reminder"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.sms.reminder"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "react-native-background-fetch"
+    ]
   }
 }
