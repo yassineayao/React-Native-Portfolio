@@ -18,7 +18,7 @@ import { defaultSettings } from "../constants/settings";
 import CardContainer from "../components/CardContainer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SelectboxListItem } from "../types";
-import { DownloadBackup } from "../services/GoogleDriveBackup";
+import { DownloadBackup, UpLoadBackup } from "../services/GoogleDriveBackup";
 import { signIn } from "../services/GoogleSignIn";
 
 const SettingsScreen = () => {
@@ -226,13 +226,11 @@ const SettingsScreen = () => {
               }
               value={settings.enabledBackup}
               onValueChange={async (value: boolean) => {
-                let signed = true;
+                let signed = false;
                 if (value) {
                   signed = await signIn();
                 }
-                if (signed) {
-                  setSettings({ ...settings, enabledBackup: value });
-                }
+                setSettings({ ...settings, enabledBackup: signed });
               }}
               className="h-5"
             />
@@ -274,6 +272,7 @@ const SettingsScreen = () => {
                       text: i18n.t("continuer"),
                       onPress: async () => {
                         await DownloadBackup();
+                        // await UpLoadBackup();
                       },
                     },
                   ]
