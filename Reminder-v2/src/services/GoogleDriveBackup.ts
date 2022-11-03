@@ -6,7 +6,6 @@ import {
 } from "@robinbobin/react-native-google-drive-api-wrapper";
 import { ToastAndroid } from "react-native";
 
-// import RNFS from "react-native-fs";
 import * as RNFS from "expo-file-system";
 import { backup_names, DBname, settingsDBName } from "../constants/settings";
 import i18n from "./i18n";
@@ -42,7 +41,9 @@ const UpLoadBackup = async () => {
     gdrive.accessToken = (await GoogleSignin.getTokens()).accessToken;
     for (const file of files) {
       if (file === DBname || file == settingsDBName) {
-        const fileContent = await RNFS.readAsStringAsync(file, "base64");
+        const fileContent = await RNFS.readAsStringAsync(`${path}${file}`, {
+          encoding: "base64",
+        });
         const id = await getBackupDBFileID(backup_names[file], gdrive);
         let res;
         try {
@@ -55,7 +56,7 @@ const UpLoadBackup = async () => {
                 name: backup_names[file],
               })
               .execute()
-              .then((res: any) => {
+              .then((res) => {
                 if (res.isComplete) {
                   console.log("Update LastBackupDate");
                   AsyncStorage.setItem("LastBackupDate", new Date().toString());
@@ -103,7 +104,9 @@ const DownloadBackup = async () => {
         continue;
       }
       const backupDBFileContent = await gdrive.files.getText(fileId);
-      await RNFS.writeAsStringAsync(`${path}${filename}`, backupDBFileContent);
+      await RNFS.writeAsStringAsync(`${path}${filename}`, backupDBFileContent, {
+        encoding: "base64",
+      });
     }
   } catch (err: any) {
     console.log(err);
