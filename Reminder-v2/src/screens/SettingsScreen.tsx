@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Switch,
   Button,
+  Alert,
 } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -17,6 +18,8 @@ import { defaultSettings } from "../constants/settings";
 import CardContainer from "../components/CardContainer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SelectboxListItem } from "../types";
+import { DownloadBackup } from "../services/GoogleDriveBackup";
+import { signIn } from "../services/GoogleSignIn";
 
 const SettingsScreen = () => {
   const [editSendingTime, setEditSendingTime] = useState<boolean>(false);
@@ -222,9 +225,15 @@ const SettingsScreen = () => {
                   : customTheme.colors.disable
               }
               value={settings.enabledBackup}
-              onValueChange={(value) =>
-                setSettings({ ...settings, enabledBackup: value })
-              }
+              onValueChange={async (value: boolean) => {
+                let signed = true;
+                if (value) {
+                  signed = await signIn();
+                }
+                if (signed) {
+                  setSettings({ ...settings, enabledBackup: value });
+                }
+              }}
               className="h-5"
             />
           </View>
@@ -237,39 +246,15 @@ const SettingsScreen = () => {
               options={[1, 2, 3, 4, 5, 6, 7].map((item) => {
                 return { id: item.toString(), item: item.toString() };
               })}
-              selectedValues={settings.backupPeriods}
-              onMultiSelect={(value: SelectboxListItem) => {
-                if (settings.backupPeriods.find((item) => item.id === value.id))
-                  setSettings({
-                    ...settings,
-                    backupPeriods: settings.backupPeriods.filter(
-                      (item) => item.id !== value.id
-                    ),
-                  });
-                else
-                  setSettings({
-                    ...settings,
-                    backupPeriods: [...settings.backupPeriods, value],
-                  });
-              }}
-              onTapClose={(value: SelectboxListItem) => {
+              value={settings.backupPeriod}
+              onChange={(value: SelectboxListItem) => {
                 setSettings({
                   ...settings,
-                  backupPeriods: settings.backupPeriods.filter(
-                    (item) => item.id !== value.id
-                  ),
+                  backupPeriod: value,
                 });
               }}
-              // onChange={onChange()}
               hideInputFilter={false}
-              isMulti
               listOptionProps={{ nestedScrollEnabled: true }}
-              multiOptionContainerStyle={{
-                backgroundColor: customTheme.colors.headerBackground,
-              }}
-              multiOptionsLabelStyle={{
-                backgroundColor: customTheme.colors.headerBackground,
-              }}
               arrowIconColor={customTheme.colors.headerBackground}
               toggleIconColor={customTheme.colors.headerBackground}
               inputFilterContainerStyle={{ display: "none" }}
@@ -277,8 +262,25 @@ const SettingsScreen = () => {
             <Button
               title={i18n.t("downloadbackup_btn")}
               color={customTheme.colors.headerBackground}
+              onPress={() => {
+                Alert.alert(
+                  i18n.t("backup"),
+                  i18n.t("downloadbackup_dialog_msg"),
+                  [
+                    {
+                      text: i18n.t("cancel"),
+                    },
+                    {
+                      text: i18n.t("continuer"),
+                      onPress: async () => {
+                        await DownloadBackup();
+                      },
+                    },
+                  ]
+                );
+              }}
             />
-          </View>
+          </View> //
         ) : (
           <></>
         )}

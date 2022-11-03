@@ -19,9 +19,13 @@ const defaultSettings = {
   time: "2022-08-25T19:00:00.501Z",
   smsModel: `السلام عليكم [اسم], نعلمك أن التأمين الخاص بك سينتهي خلال [عدد_الايام] أيام. يرجى الاتصال بنا للتجديد.`,
   remainSmsModel: `السلام عيكم و رحمة الله تعالى و بركاته`,
-  smsPeriods: [] as SelectboxListItem[],
+  smsPeriods: [
+    { id: "1", item: "1" },
+    { id: "3", item: "3" },
+    { id: "7", item: "7" },
+  ] as SelectboxListItem[],
   enabledBackup: false,
-  backupPeriod: {} as SelectboxListItem,
+  backupPeriod: { id: "7", item: "7" } as SelectboxListItem,
 };
 
 export {

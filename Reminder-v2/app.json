@@ -33,12 +33,13 @@
       "adaptiveIcon": {
         "backgroundColor": "#FFFFFF"
       },
+      "googleServicesFile": "./google-services.json",
       "package": "com.sms.reminder"
     },
-    "web": {
-    },
+    "web": {},
     "plugins": [
-      "react-native-background-fetch"
+      "react-native-background-fetch",
+      "@react-native-google-signin/google-signin"
     ]
   }
 }

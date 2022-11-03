@@ -1,14 +1,11 @@
 import BackgroundFetch from "react-native-background-fetch";
 
-import {
-  aDay,
-  defaultSettings,
-  locale,
-} from "../constants/settings";
+import { aDay, defaultSettings, locale } from "../constants/settings";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Vehicle } from "../types";
 import { Database } from "../database/Database";
+import { UpLoadBackup } from "./GoogleDriveBackup";
 
 BackgroundFetch.finish("com.reminder.smsautosend");
 BackgroundFetch.stop("com.reminder.smsautosend");
@@ -37,6 +34,27 @@ const task = async () => {
   let _settings = await AsyncStorage.getItem("Settings");
   let settings = defaultSettings;
   if (_settings) settings = JSON.parse(_settings);
+
+  // Upload a backup image
+  try {
+    AsyncStorage.getItem("LastBackupDate", async (e, date) => {
+      const today = new Date();
+      if (date) {
+        const lastDate = new Date(date);
+        const diffDays = Math.floor(
+          (today.getMilliseconds() - lastDate.getMilliseconds()) / aDay
+        );
+        if (
+          settings.enabledBackup &&
+          diffDays >= parseInt(settings.backupPeriod.id)
+        ) {
+          UpLoadBackup();
+        }
+      } else AsyncStorage.setItem("LastBackupDate", today.toString());
+    });
+  } catch (error: any) {
+    console.error(error.message);
+  }
 
   try {
     await new Promise(async () => {
