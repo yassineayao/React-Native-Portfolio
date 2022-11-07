@@ -1,0 +1,15 @@
+body {
+  margin: 0%;
+  padding: 0%;
+}
+
+.spinner {
+  width: 100%;
+  position: absolute;
+}
+
+.spinner > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
