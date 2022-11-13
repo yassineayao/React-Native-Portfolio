@@ -15,10 +15,13 @@ import {
   EyeIcon,
   EyeSlashIcon,
 } from "react-native-heroicons/outline";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import Svg, { Circle, ClipPath, Image } from "react-native-svg";
+import Svg, { Circle, ClipPath, ClipPathProps, Image } from "react-native-svg";
+import { DomainName } from "../constants/settings";
 import { COLORS, SIZES } from "../constants/Theme";
 import i18n from "../locales/i18n";
+import { TResponse } from "../types";
 
 export default function Login() {
   /**
@@ -34,16 +37,49 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const adaptedHeight = (SIZES.height * 2) / 3;
 
-  // const { signIn } = useContext(AuthContext);
-
   const handlePhoneNumber = (phoneNum: string) => {
     setPhoneNumber(phoneNum);
   };
 
   const handleLogin = (phone: string, password: string) => {
-    // signIn(phone, password, navigation);
+    // TODO: move this to server file
+    fetch(DomainName + "/auth-jwt/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ phone: phone, password: password }),
+    })
+      .then(async (res: Response) => {
+        if (res.status >= 200 && res.status <= 299) {
+          const _res: TResponse = await res.json();
+          console.log(_res);
+          AsyncStorage.setItem("token", _res.token);
+        } else {
+          const msg = await res.json();
+          for (const field in msg) {
+            if (field === "non_field_errors")
+              if (
+                msg[field].includes(
+                  "Unable to log in with provided credentials."
+                )
+              ) {
+                // Trow wrong creadentials error
+                throw Error(i18n.t("login_wrong_credentials"));
+              }
+          }
+          // In other case throw an empty error
+          // This error will be traited as missing of internet connection.
+          throw Error();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        // TODO: Add toast messages
+      });
   };
 
+  const SafeClipPath = ClipPath as unknown as React.FunctionComponent<any>;
   return (
     <View
       style={{
@@ -55,9 +91,9 @@ export default function Login() {
       <StatusBar hidden />
       <View className="flex-1">
         <Svg width={SIZES.width} height={adaptedHeight}>
-          <ClipPath id="clip">
+          <SafeClipPath id="clip">
             <Circle r={adaptedHeight} cx={SIZES.width / 2} />
-          </ClipPath>
+          </SafeClipPath>
           <Image
             href={require("../images/store.jpg")}
             width={SIZES.width}
@@ -83,7 +119,6 @@ export default function Login() {
             border-b
             border-b-gray-400
           `}
-            // errorMessage={isValide ? "" : "Invalide Number"}
             value={phoneNumber}
             onChangeText={(phone) => handlePhoneNumber(phone)}
           />
@@ -95,18 +130,17 @@ export default function Login() {
           <TextInput
             placeholder={i18n.t("login_password_input")}
             className={`
-            flex-1
-            justify-center
-            items-center
-            bg-white
-            h-[60]
-            p-2
-            m-2
-            border-b
-            border-b-gray-400
+              flex-1
+              justify-center
+              items-center
+              bg-white
+              h-[60]
+              p-2
+              m-2
+              border-b
+              border-b-gray-400
             `}
             secureTextEntry={!showPassword}
-            // errorMessage={isValide ? "" : "Invalide Number"}
             value={password}
             onChangeText={setPassword}
           />
