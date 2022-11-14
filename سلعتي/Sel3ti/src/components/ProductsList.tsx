@@ -192,7 +192,6 @@ function ProductsList(props: {
       1,
       setPage,
       setLoadingProducts,
-      // setIsBanned,
       true
     );
   }, [family.name]);
@@ -201,8 +200,8 @@ function ProductsList(props: {
     // set allFamilies state
     if (props.search.length > 0) {
       setProducts(
-        allProducts.filter((product: TProduct) =>
-          product.name.toLowerCase().includes(props.search.toLowerCase())
+        allProducts.filter((item: { product: TProduct }) =>
+          item.product.name.toLowerCase().includes(props.search.toLowerCase())
         )
       );
     } else {
@@ -250,29 +249,6 @@ function ProductsList(props: {
       makeRemoteSearch(props.search.toLowerCase());
     }
   }, [props.search]);
-
-  const renderFooter = () => {
-    return loadingProducts ? (
-      <ActivityIndicator animating size={60} color={COLORS.primary} />
-    ) : (
-      <View
-        style={{
-          flex: 1,
-          alignContent: "center",
-          justifyContent: "center",
-          marginHorizontal: SIZES.width * 0.05,
-        }}
-      >
-        {
-          <Icon
-            name="crosshairs"
-            size={SIZES.width * 0.9}
-            color={COLORS.secondary}
-          />
-        }
-      </View>
-    );
-  };
 
   return (
     <View
