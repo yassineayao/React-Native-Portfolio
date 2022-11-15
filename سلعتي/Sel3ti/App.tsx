@@ -1,11 +1,15 @@
-import { StatusBar, Text, View } from "react-native";
-import Login from "./src/screens/Login";
+import "react-native-gesture-handler";
+import { NavigationContainer } from "@react-navigation/native";
+import { StatusBar, View } from "react-native";
+import BottomTabs from "./src/navigators/BottomTabs";
 
 export default function App() {
   return (
     <View className="flex-1 bg-gray-50">
-      <StatusBar barStyle="default" />
-      <Login />
+      <StatusBar barStyle="dark-content" backgroundColor="white" />
+      <NavigationContainer>
+        <BottomTabs />
+      </NavigationContainer>
     </View>
   );
 }
