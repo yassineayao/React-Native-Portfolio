@@ -17,9 +17,9 @@ import { COLORS, SIZES } from "../constants/Theme";
 import { LoadProducts } from "../data/server";
 
 import i18n from "../locales/i18n";
-import { TCartItem, TFamily, TProduct } from "../types";
+import { TOrderItem, TFamily, TProduct } from "../types";
 
-const Item = (props: { item: TCartItem }) => {
+const Item = (props: { item: TOrderItem }) => {
   /**
    * Render a single item in the list of products.
    */
@@ -151,7 +151,7 @@ const Item = (props: { item: TCartItem }) => {
   );
 };
 
-const renderItem = (item: TCartItem) => {
+const renderItem = (item: TOrderItem) => {
   return <Item item={item} />;
 };
 
@@ -161,7 +161,7 @@ function ProductsList(props: {
   // isReclamation: boolean;
   search: string;
 }) {
-  const [products, setProducts] = React.useState<TCartItem[]>([]);
+  const [products, setProducts] = React.useState<TOrderItem[]>([]);
   const [allProducts, setAllProducts] = React.useState([]);
   const [page, setPage] = React.useState(1);
   const [loadingProducts, setLoadingProducts] = React.useState(true);
@@ -279,7 +279,7 @@ function ProductsList(props: {
         {!_.isEmpty(products) ? (
           <FlatList
             data={products}
-            renderItem={(prop: { item: TCartItem }) => renderItem(prop.item)}
+            renderItem={(prop: { item: TOrderItem }) => renderItem(prop.item)}
             onEndReached={handleScroll}
             refreshing={true}
             bounces
