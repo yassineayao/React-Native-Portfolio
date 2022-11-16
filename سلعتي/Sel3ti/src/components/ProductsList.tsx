@@ -158,14 +158,12 @@ const renderItem = (item: TOrderItem) => {
 function ProductsList(props: {
   switchResultPage: Function;
   category: string;
-  // isReclamation: boolean;
   search: string;
 }) {
   const [products, setProducts] = React.useState<TOrderItem[]>([]);
   const [allProducts, setAllProducts] = React.useState([]);
   const [page, setPage] = React.useState(1);
   const [loadingProducts, setLoadingProducts] = React.useState(true);
-  // const [isBanned, setIsBanned] = React.useState(false);
 
   // TODO: Move to redux store
   const [family, setFamily] = React.useState<TFamily>({
