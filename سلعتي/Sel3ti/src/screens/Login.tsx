@@ -17,7 +17,7 @@ import {
 } from "react-native-heroicons/outline";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import Svg, { Circle, ClipPath, ClipPathProps, Image } from "react-native-svg";
+import Svg, { Circle, ClipPath, Image } from "react-native-svg";
 import { DomainName } from "../constants/settings";
 import { COLORS, SIZES } from "../constants/Theme";
 import i18n from "../locales/i18n";
