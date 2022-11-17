@@ -22,6 +22,7 @@ const Item = (props: { item: TOrderItem; index: number }) => {
       handleOnDelete={handleOnDelete as () => {}}
       index={props.index}
       item={props.item as TOrderItem}
+      isSwipeable
     />
   );
 };
