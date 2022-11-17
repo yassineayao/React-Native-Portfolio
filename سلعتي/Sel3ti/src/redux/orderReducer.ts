@@ -1,12 +1,21 @@
 import { TOrderItem } from "../types";
-import { ADD_ORDER, CLEAN_CART, RMEOVE_ORDER, UPDATE_ORDER } from "./actions";
+import {
+  ADD_ORDER,
+  CLEAN_CART,
+  RMEOVE_ORDER,
+  UPDATE_ORDER,
+} from "./actions";
 import { AnyAction } from "@reduxjs/toolkit";
 
-export const initState: { items: TOrderItem[] } = {
+interface TState {
+  items: TOrderItem[];
+}
+
+export const initOrderState: TState = {
   items: [],
 };
 
-export const Order = (state = initState, action: AnyAction) => {
+export const Order = (state: TState = initOrderState, action: AnyAction) => {
   switch (action.type) {
     case ADD_ORDER:
       return {
