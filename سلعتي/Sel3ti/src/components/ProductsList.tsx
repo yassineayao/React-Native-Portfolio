@@ -4,155 +4,19 @@ import React from "react";
 import {
   ActivityIndicator,
   FlatList,
-  Image,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import { ListItem, Text } from "react-native-elements";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
-import Icon from "react-native-vector-icons/FontAwesome5";
 import { COLORS, SIZES } from "../constants/Theme";
 import { LoadProducts } from "../data/server";
 
-import i18n from "../locales/i18n";
 import { TOrderItem, TFamily, TProduct } from "../types";
+import SwipeableCard from "./SwipeableCard";
 
-const Item = (props: { item: TOrderItem }) => {
-  /**
-   * Render a single item in the list of products.
-   */
-
-  const [isFavorite, setIsFavorite] = React.useState(false);
-  const [quantity, setQuantity] = React.useState(0);
-  /**
-   * Render a single item in the list of products.
-   */
-  const handleQuantity = (val: number) => {
-    setQuantity(Math.max(val, 0));
-  };
-
-  const handleFavorite = () => {
-    setIsFavorite(!isFavorite);
-  };
-
-  const source = {
-    uri: props.item.product ? props.item.product.image : "",
-  };
-  return (
-    <React.Fragment>
-      <View className="p-2">
-        <ListItem
-          className="shadow-md shadow-black rounded-2xl overflow-hidden"
-          hasTVPreferredFocus={undefined}
-          tvParallaxProperties={undefined}
-        >
-          <View className="flex-row">
-            <TouchableOpacity
-              style={{
-                justifyContent: "center",
-              }}
-              onPress={handleFavorite}
-            >
-              <Image
-                source={source}
-                className="w-[100] h-[100] mx-1 rounded-lg"
-                resizeMode="cover"
-              />
-              <View
-                style={{
-                  position: "absolute",
-                  width: "100%",
-                  height: "100%",
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Icon
-                  name="heart"
-                  size={70}
-                  color={isFavorite ? COLORS.lightPrimary : COLORS.transparent}
-                />
-              </View>
-            </TouchableOpacity>
-            <ListItem.Content>
-              <ListItem.Title>{props.item.product?.name}</ListItem.Title>
-              <ListItem.Subtitle>
-                {parseFloat(props.item.price).toFixed(2)} {i18n.t("currency")}
-              </ListItem.Subtitle>
-            </ListItem.Content>
-            {props.item.is_promoted && (
-              <View
-                style={{
-                  marginRight: 22,
-                  position: "absolute",
-                  backgroundColor: COLORS.white,
-                  padding: 3,
-                  borderRadius: 100,
-                }}
-              >
-                <Icon name="gift" size={25} color={COLORS.primary} />
-              </View>
-            )}
-            {
-              // TITLE: Quantity
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "flex-end",
-                  alignItems: "center",
-                  padding: SIZES.padding,
-                }}
-              >
-                <TouchableOpacity
-                  className={`
-                      w-[20]
-                      h-[20]
-                      rounded-tl-full
-                      rounded-bl-full
-                      bg-primary
-                      justify-center
-                      items-center
-                    `}
-                  onPressIn={() => handleQuantity(Math.max(quantity - 1, 0))}
-                >
-                  <Text className="text-gray-200">-</Text>
-                </TouchableOpacity>
-                <TextInput
-                  className="text-center"
-                  onChangeText={(el) => handleQuantity(Number(el))}
-                  value={quantity.toString()}
-                />
-                <TouchableOpacity
-                  className={`
-                      w-[20]
-                      h-[20]
-                      rounded-tr-full
-                      rounded-br-full
-                      bg-primary
-                      justify-center
-                      items-center
-                    `}
-                  onPressIn={() => handleQuantity(quantity + 1)}
-                >
-                  <Text className="text-gray-200">+</Text>
-                </TouchableOpacity>
-              </View>
-            }
-          </View>
-        </ListItem>
-      </View>
-    </React.Fragment>
-  );
-};
-
-const renderItem = (item: TOrderItem) => {
-  return <Item item={item} />;
+const renderItem = (item: TOrderItem, index: number) => {
+  return <SwipeableCard index={index} item={item} />;
 };
 
 function ProductsList(props: {
@@ -277,7 +141,9 @@ function ProductsList(props: {
         {!_.isEmpty(products) ? (
           <FlatList
             data={products}
-            renderItem={(prop: { item: TOrderItem }) => renderItem(prop.item)}
+            renderItem={(prop: { item: TOrderItem; index: number }) =>
+              renderItem(prop.item, prop.index)
+            }
             onEndReached={handleScroll}
             refreshing={true}
             bounces

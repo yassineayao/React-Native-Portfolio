@@ -5,20 +5,59 @@ import {
 } from "react-native-gesture-handler";
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Button, ListItem } from "react-native-elements";
+
+import { useDispatch, useSelector } from "react-redux";
+
 import Icon from "react-native-vector-icons/FontAwesome5";
 import i18n from "../locales/i18n";
 import { COLORS, SIZES } from "../constants/Theme";
 import { TOrderItem } from "../types";
+import { ADD_ORDER, RMEOVE_ORDER, UPDATE_ORDER } from "../redux/actions";
 
 const SwipeableCard = (prop: {
   item: TOrderItem;
   index: number;
-  handleOnDelete: () => {};
+  isSwipeable?: boolean;
+  handleOnDelete?: () => {};
 }) => {
-  const [quantity, setQuantity] = React.useState(prop.item.quantity);
+  const quantity = useSelector((state: { order: { items: TOrderItem[] } }) => {
+    const items = state.order.items.filter(
+      (order) => order.id === prop.item.id
+    );
+    if (!items.length) return 0;
+    else return items[0].quantity;
+  });
+  const dispatch = useDispatch();
+  const addOrder = (order: TOrderItem) =>
+    dispatch({ type: ADD_ORDER, payload: { order } });
+  const updateOrder = (order: TOrderItem) =>
+    dispatch({ type: UPDATE_ORDER, payload: { order } });
+  const removeOrder = (order: TOrderItem) =>
+    dispatch({ type: RMEOVE_ORDER, payload: { order } });
+
   function handleQuantity(val: number) {
     // initialize quantity
-    setQuantity(val);
+    // setQuantity(val);
+    const order = {
+      id: prop.item.id,
+      is_promoted: prop.item.is_promoted,
+      price: prop.item.price,
+      product: prop.item.product,
+      quantity: val,
+    };
+    if (quantity === 0) addOrder(order);
+    else if (val === 0) removeOrder(order);
+    else updateOrder(order);
+  }
+
+  function handleOnDelete() {
+    removeOrder({
+      id: prop.item.id,
+      is_promoted: prop.item.is_promoted,
+      price: prop.item.price,
+      product: prop.item.product,
+      quantity,
+    });
   }
 
   return (
@@ -29,22 +68,24 @@ const SwipeableCard = (prop: {
             paddingHorizontal: 5,
             paddingVertical: 5,
           }}
-          renderRightActions={() => (
-            <View className="py-2 px-1">
-              <Button
-                title={i18n.t("orders_swipeable_delete_btn_title")}
-                icon={{ name: "delete", color: "white", size: 25 }}
-                buttonStyle={{
-                  height: "100%",
-                  backgroundColor: COLORS.danger,
-                  marginHorizontal: SIZES.padding,
-                  padding: SIZES.padding,
-                  borderRadius: SIZES.radius1,
-                }}
-                onPress={prop.handleOnDelete}
-              />
-            </View>
-          )}
+          renderRightActions={() =>
+            prop.isSwipeable ? (
+              <View className="py-2 px-1">
+                <Button
+                  title={i18n.t("orders_swipeable_delete_btn_title")}
+                  icon={{ name: "delete", color: "white", size: 25 }}
+                  buttonStyle={{
+                    height: "100%",
+                    backgroundColor: COLORS.danger,
+                    marginHorizontal: SIZES.padding,
+                    padding: SIZES.padding,
+                    borderRadius: SIZES.radius1,
+                  }}
+                  onPress={handleOnDelete}
+                />
+              </View>
+            ) : null
+          }
         >
           <ListItem
             className="shadow-md shadow-black rounded-2xl overflow-hidden"
@@ -52,11 +93,13 @@ const SwipeableCard = (prop: {
             tvParallaxProperties={undefined}
           >
             <View className="flex-row">
-              <Image
-                source={{ uri: prop.item.product.image }}
-                className="w-[70] h-[70] mr-2 rounded-lg"
-                resizeMode="cover"
-              />
+              <TouchableOpacity>
+                <Image
+                  source={{ uri: prop.item.product.image }}
+                  className="w-[70] h-[70] mr-2 rounded-lg"
+                  resizeMode="cover"
+                />
+              </TouchableOpacity>
               <ListItem.Content>
                 <ListItem.Title className="text-lg">
                   {prop.item.product.name}
@@ -89,7 +132,7 @@ const SwipeableCard = (prop: {
                 <TextInput
                   className="text-center"
                   onChangeText={(el) => handleQuantity(Number(el))}
-                  value={quantity.toString()}
+                  value={quantity?.toString()}
                 />
                 <TouchableOpacity
                   className="bg-primary w-[20] h-[20] rounded-r-full justify-center items-center"
