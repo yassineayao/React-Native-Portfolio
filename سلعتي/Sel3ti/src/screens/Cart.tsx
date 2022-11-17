@@ -2,9 +2,11 @@
  * File: Orders.js
  * Description: Render the Cart screen whitch contains the list of ordered products.
  */
-import React from "react";
+import React, { useState } from "react";
 import { Alert, FlatList } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
+
+import { useSelector, useDispatch } from "react-redux";
 
 import { View } from "react-native";
 
@@ -16,68 +18,29 @@ import _ from "lodash";
 import i18n from "../locales/i18n";
 import { TOrderItem } from "../types";
 import SwipeableCard from "../components/SwipeableCard";
+import { CLEAN_CART } from "../redux/actions";
 
 const Item = (prop: { order: TOrderItem; index: number }) => {
   /**
    * Render a single product in the list of ordered products
    * @param order contains the ordered product info
    */
-
-  const handleOnDelete = async () => {
-    Alert.alert(
-      i18n.t("orders_ondelete_alert_title"),
-      i18n.t("orders_ondelete_alert_message"),
-      [
-        {
-          text: i18n.t("orders_ondelete_alert_positive_btn_txt"),
-          style: "destructive",
-          onPress: () => {
-            // TODO: Send new orders or new updates to the server
-          },
-        },
-        {
-          text: i18n.t("alert_nigative_btn_txt"),
-          style: "cancel",
-        },
-      ]
-    );
-  };
-
-  return (
-    <SwipeableCard
-      handleOnDelete={handleOnDelete}
-      index={prop.index}
-      item={prop.order}
-    />
-  );
+  return <SwipeableCard index={prop.index} item={prop.order} isSwipeable />;
 };
 
 const Cart = () => {
-  /**
-   * render the list of ordered products
-   * @param orders list of orderd products
-   * @param navigation object used to navigate between the app screens
-   */
-  const [isSubmitted, setIsSubmitted] = React.useState(false);
-  const [modalVisible, setModalVisible] = React.useState(false);
-  const [orders, setOrders] = React.useState<TOrderItem[]>([
-    {
-      id: 0,
-      is_promoted: false,
-      price: "37",
-      quantity: 8,
-      product: {
-        id: "3",
-        image:
-          "https://www.echoroukonline.com/wp-content/uploads/2021/03/%D8%A7%D9%84%D9%82%D9%85%D8%AD.jpg",
-        name: "name",
-      },
-    },
-  ]);
-  const [info, setInfo] = React.useState<TOrderItem[]>([]);
-  const [extra, setExtra] = React.useState({
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [info, setInfo] = useState<TOrderItem[]>([]);
+  const [extra, setExtra] = useState({
     total: 0,
   });
+
+  const items: TOrderItem[] = useSelector(
+    (state: { order: { items: TOrderItem[] } }) => state.order.items
+  );
+  const dispatch = useDispatch();
+  const cleanCart = () => dispatch({ type: CLEAN_CART });
 
   React.useEffect(() => {
     if (modalVisible) {
@@ -85,7 +48,7 @@ const Cart = () => {
       let id = 0;
       const moreInfo = { total: 0.0 };
       moreInfo.total = 0;
-      for (const order of orders) {
+      for (const order of items) {
         // TODO: Correct the price calculation
         const price = parseFloat(order.price) * order.quantity;
         tmpInfo.push({
@@ -105,7 +68,7 @@ const Cart = () => {
     return <Item order={prop.item} index={prop.index} />;
   };
 
-  const handleClear = () => {
+  const handleClean = () => {
     // remove all products from the current order
     Alert.alert(
       i18n.t("orders_onclear_alert_title"),
@@ -113,9 +76,7 @@ const Cart = () => {
       [
         {
           text: i18n.t("orders_onclear_alert_positive_btn_txt"),
-          onPress: () => {
-            // setQuantities(quantities, null, true);
-          },
+          onPress: cleanCart,
         },
         {
           text: i18n.t("alert_nigative_btn_txt"),
@@ -129,7 +90,7 @@ const Cart = () => {
     setModalVisible(true);
   };
 
-  return orders && orders.length > 0 ? (
+  return items && items.length > 0 ? (
     <View
       style={{
         flex: 1,
@@ -147,7 +108,7 @@ const Cart = () => {
         extra={extra}
       />
       {/* )} */}
-      <FlatList data={orders} renderItem={renderItem} />
+      <FlatList data={items} renderItem={renderItem} />
       <View
         style={{
           flexDirection: "row",
@@ -184,7 +145,7 @@ const Cart = () => {
               margin: SIZES.padding,
               backgroundColor: COLORS.danger,
             }}
-            onPress={handleClear}
+            onPress={handleClean}
           />
         )}
       </View>
