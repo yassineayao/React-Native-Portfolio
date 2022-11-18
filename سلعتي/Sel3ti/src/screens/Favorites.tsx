@@ -9,48 +9,27 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 
 import { TOrderItem } from "../types";
 import SwipeableCard from "../components/SwipeableCard";
+import { useDispatch, useSelector } from "react-redux";
+import { AnyAction } from "redux";
+import { DELETE_FAVORITE } from "../redux/actions";
 
-const Item = (props: { item: TOrderItem; index: number }) => {
-  /**
-   * Render a single item in the list of products.
-   */
-
-  const handleOnDelete = () => {};
-
-  return (
-    <SwipeableCard
-      handleOnDelete={handleOnDelete as () => {}}
-      index={props.index}
-      item={props.item as TOrderItem}
-      isSwipeable
-    />
-  );
-};
 const Favorites = () => {
-  /**
-   * render the list of favorite products
-   * @param favoriteProducts the list of favorite products
-   */
-
-  const [favoriteProducts, setFavoritesProducts] = React.useState<TOrderItem[]>(
-    [
-      {
-        id: 0,
-        is_promoted: false,
-        price: "89.99",
-        product: {
-          id: "8",
-          image:
-            "https://www.echoroukonline.com/wp-content/uploads/2021/03/%D8%A7%D9%84%D9%82%D9%85%D8%AD.jpg",
-          name: "name",
-        },
-        quantity: 0,
-      },
-    ]
+  const favoriteProducts = useSelector(
+    (state: AnyAction) => state.favorite.items
   );
+  const dispatch = useDispatch();
+  const deleteFavorite = (item: TOrderItem) =>
+    dispatch({ type: DELETE_FAVORITE, payload: { favorite: item } });
 
   const renderItem = (prop: { item: TOrderItem; index: number }) => {
-    return <Item item={prop.item} index={prop.index} />;
+    return (
+      <SwipeableCard
+        handleOnDelete={deleteFavorite as (item: TOrderItem) => void}
+        index={prop.index}
+        item={prop.item as TOrderItem}
+        isSwipeable
+      />
+    );
   };
 
   return (

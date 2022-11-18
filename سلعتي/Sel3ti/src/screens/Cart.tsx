@@ -18,15 +18,9 @@ import _ from "lodash";
 import i18n from "../locales/i18n";
 import { TOrderItem } from "../types";
 import SwipeableCard from "../components/SwipeableCard";
-import { CLEAN_CART } from "../redux/actions";
+import { CLEAN_CART, RMEOVE_ORDER } from "../redux/actions";
 
-const Item = (prop: { order: TOrderItem; index: number }) => {
-  /**
-   * Render a single product in the list of ordered products
-   * @param order contains the ordered product info
-   */
-  return <SwipeableCard index={prop.index} item={prop.order} isSwipeable />;
-};
+// FIXME: The order of the card items is reordered each time the quantity changed
 
 const Cart = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -41,6 +35,8 @@ const Cart = () => {
   );
   const dispatch = useDispatch();
   const cleanCart = () => dispatch({ type: CLEAN_CART });
+  const deleteOrder = (item: TOrderItem) =>
+    dispatch({ type: RMEOVE_ORDER, payload: { order: item } });
 
   React.useEffect(() => {
     if (modalVisible) {
@@ -65,7 +61,14 @@ const Cart = () => {
   }, [modalVisible]);
 
   const renderItem = (prop: { index: number; item: TOrderItem }) => {
-    return <Item order={prop.item} index={prop.index} />;
+    return (
+      <SwipeableCard
+        index={prop.index}
+        item={prop.item}
+        handleOnDelete={deleteOrder as (item: TOrderItem) => void}
+        isSwipeable
+      />
+    );
   };
 
   const handleClean = () => {

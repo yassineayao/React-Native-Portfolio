@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { Order } from "./reducers";
+import { Favorite } from "./FavoriteReducer";
+import { Order } from "./orderReducer";
 
 export const Store = configureStore({
   reducer: {
     order: Order,
+    favorite: Favorite,
   },
 });

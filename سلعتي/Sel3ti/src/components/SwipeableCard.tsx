@@ -12,13 +12,19 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import i18n from "../locales/i18n";
 import { COLORS, SIZES } from "../constants/Theme";
 import { TOrderItem } from "../types";
-import { ADD_ORDER, RMEOVE_ORDER, UPDATE_ORDER } from "../redux/actions";
+import {
+  ADD_FAVORITE,
+  ADD_ORDER,
+  DELETE_FAVORITE,
+  RMEOVE_ORDER,
+  UPDATE_ORDER,
+} from "../redux/actions";
 
 const SwipeableCard = (prop: {
   item: TOrderItem;
   index: number;
   isSwipeable?: boolean;
-  handleOnDelete?: () => {};
+  handleOnDelete?: (item: TOrderItem) => void | undefined;
 }) => {
   const quantity = useSelector((state: { order: { items: TOrderItem[] } }) => {
     const items = state.order.items.filter(
@@ -27,6 +33,16 @@ const SwipeableCard = (prop: {
     if (!items.length) return 0;
     else return items[0].quantity;
   });
+
+  const isFavorite = useSelector(
+    (state: { favorite: { items: TOrderItem[] } }) => {
+      const items = state.favorite.items.filter(
+        (favorite) => favorite.id === prop.item.id
+      );
+      return items.length === 1;
+    }
+  );
+
   const dispatch = useDispatch();
   const addOrder = (order: TOrderItem) =>
     dispatch({ type: ADD_ORDER, payload: { order } });
@@ -34,10 +50,21 @@ const SwipeableCard = (prop: {
     dispatch({ type: UPDATE_ORDER, payload: { order } });
   const removeOrder = (order: TOrderItem) =>
     dispatch({ type: RMEOVE_ORDER, payload: { order } });
+  const toggleFavorite = (favorite: TOrderItem) => {
+    if (isFavorite)
+      dispatch({
+        type: DELETE_FAVORITE,
+        payload: { favorite },
+      });
+    else
+      dispatch({
+        type: ADD_FAVORITE,
+        payload: { favorite },
+      });
+  };
 
   function handleQuantity(val: number) {
     // initialize quantity
-    // setQuantity(val);
     const order = {
       id: prop.item.id,
       is_promoted: prop.item.is_promoted,
@@ -51,13 +78,7 @@ const SwipeableCard = (prop: {
   }
 
   function handleOnDelete() {
-    removeOrder({
-      id: prop.item.id,
-      is_promoted: prop.item.is_promoted,
-      price: prop.item.price,
-      product: prop.item.product,
-      quantity,
-    });
+    if (prop.handleOnDelete) prop.handleOnDelete(prop.item);
   }
 
   return (
@@ -93,12 +114,23 @@ const SwipeableCard = (prop: {
             tvParallaxProperties={undefined}
           >
             <View className="flex-row">
-              <TouchableOpacity>
-                <Image
-                  source={{ uri: prop.item.product.image }}
-                  className="w-[70] h-[70] mr-2 rounded-lg"
-                  resizeMode="cover"
-                />
+              <TouchableOpacity
+                onPress={() => {
+                  toggleFavorite(prop.item);
+                }}
+              >
+                <View>
+                  <Image
+                    source={{ uri: prop.item.product.image }}
+                    className="w-[70] h-[70] mr-2 rounded-lg"
+                    resizeMode="cover"
+                  />
+                  {isFavorite && (
+                    <View className="absolute w-full h-full justify-center items-center">
+                      <Icon name="heart" size={50} color={COLORS.primary} />
+                    </View>
+                  )}
+                </View>
               </TouchableOpacity>
               <ListItem.Content>
                 <ListItem.Title className="text-lg">
