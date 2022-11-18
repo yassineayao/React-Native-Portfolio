@@ -89,7 +89,8 @@ const SwipeableCard = (prop: {
             paddingHorizontal: 5,
             paddingVertical: 5,
           }}
-          renderRightActions={() =>
+          renderRightActions={() => null}
+          renderLeftActions={() =>
             prop.isSwipeable ? (
               <View className="py-2 px-1">
                 <Button
@@ -157,18 +158,19 @@ const SwipeableCard = (prop: {
               <View className="flex-row p-2 justify-center items-center">
                 <TouchableOpacity
                   className="bg-primary w-[20] h-[20] rounded-l-full justify-center items-center"
-                  onPressIn={() => handleQuantity(Math.max(quantity - 1, 0))}
+                  onPress={() => handleQuantity(Math.max(quantity - 1, 0))}
                 >
                   <Text className="text-gray-200">-</Text>
                 </TouchableOpacity>
                 <TextInput
+                  keyboardType="decimal-pad"
                   className="text-center"
                   onChangeText={(el) => handleQuantity(Number(el))}
                   value={quantity?.toString()}
                 />
                 <TouchableOpacity
                   className="bg-primary w-[20] h-[20] rounded-r-full justify-center items-center"
-                  onPressIn={() => handleQuantity(quantity + 1)}
+                  onPress={() => handleQuantity(quantity + 1)}
                 >
                   <Text className="text-gray-200">+</Text>
                 </TouchableOpacity>
