@@ -1,10 +1,5 @@
 import { TOrderItem } from "../types";
-import {
-  ADD_ORDER,
-  CLEAN_CART,
-  RMEOVE_ORDER,
-  UPDATE_ORDER,
-} from "./actions";
+import { ADD_ORDER, CLEAN_CART, RMEOVE_ORDER, UPDATE_ORDER } from "./actions";
 import { AnyAction } from "@reduxjs/toolkit";
 
 interface TState {
@@ -26,12 +21,11 @@ export const Order = (state: TState = initOrderState, action: AnyAction) => {
         ],
       };
     case UPDATE_ORDER:
-      const items = state.items.filter(
-        (order) => order.id !== action.payload.order.id
-      );
       return {
         ...state,
-        items: [...items, action.payload.order],
+        items: state.items.map((item) =>
+          item.id === action.payload.order.id ? action.payload.order : item
+        ),
       };
     case RMEOVE_ORDER:
       return {

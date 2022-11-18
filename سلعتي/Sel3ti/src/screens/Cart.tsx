@@ -20,8 +20,6 @@ import { TOrderItem } from "../types";
 import SwipeableCard from "../components/SwipeableCard";
 import { CLEAN_CART, RMEOVE_ORDER } from "../redux/actions";
 
-// FIXME: The order of the card items is reordered each time the quantity changed
-
 const Cart = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
