@@ -9,6 +9,6 @@ const translation = {
 };
 const i18n = new I18n(translation);
 i18n.enableFallback = true;
-i18n.locale = "ar";
+i18n.locale = "en";
 
 export default i18n;
