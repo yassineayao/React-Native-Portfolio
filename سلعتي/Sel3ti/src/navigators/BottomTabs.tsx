@@ -2,7 +2,7 @@
  * File: Home.js
  * Description: Render the bottom tab and its corresponding screens
  */
-import React from "react";
+import React, { useEffect } from "react";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
 import History from "../screens/History";
@@ -14,6 +14,9 @@ import Statistics from "../screens/Statistics";
 import i18n from "../locales/i18n";
 import { COLORS } from "../constants/Theme";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch } from "react-redux";
+import { RESTORE_FAVORITES } from "../redux/actions";
 
 // create the tab navigator
 const Tab = createBottomTabNavigator();
@@ -22,6 +25,17 @@ function BottomTabs() {
   /**
    * render the tab navigator
    */
+  const dispatch = useDispatch();
+  useEffect(() => {
+    AsyncStorage.getItem("Favorites", (e, v) => {
+      if (v) {
+        dispatch({
+          type: RESTORE_FAVORITES,
+          payload: { favorite: JSON.parse(v) },
+        });
+      }
+    });
+  }, []);
   return (
     <Tab.Navigator
       initialRouteName={i18n.t("home_statistics_screen_name")}
