@@ -24,7 +24,7 @@ function BottomTabs() {
    */
   return (
     <Tab.Navigator
-      initialRouteName={"البيانات"}
+      initialRouteName={i18n.t("home_statistics_screen_name")}
       backBehavior="order"
       safeAreaInsets={{
         bottom: 3,
@@ -48,7 +48,7 @@ function BottomTabs() {
       }}
     >
       <Tab.Screen
-        name={"البيانات"}
+        name={i18n.t("home_statistics_screen_name")}
         component={Statistics}
         options={{
           tabBarIcon: (props: { color: string; focused: boolean }) => (

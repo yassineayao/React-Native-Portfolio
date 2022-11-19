@@ -4,6 +4,7 @@
     "login_password_input": "الرقم السري",
     "login_signin_btn": "تسجيل الدخول",
     "login_wrong_credentials": "المرجوا التاكد من صحة رقم الهاتف و كلمة المرور",
+    "home_statistics_screen_name": "البيانات",
     "home_category_screen_name": "الرئيسية",
     "home_favorite_screen_name": "المفضلة",
     "home_cart_screen_name": "السلة",
@@ -59,6 +60,14 @@
     "reclamation_compressed": "مشوهة",
     "currency": "د.م",
     "connection_error_msg": "تاكد من اتصالك بالانترنيت",
-    "alert_nigative_btn_txt": "الغاء"
+    "alert_nigative_btn_txt": "الغاء",
+    "welcome": "مرحبا",
+    "points": "النقط",
+    "month": "شهر",
+    "six_month": "ستة أشهر",
+    "year": "سنة",
+    "transaction_number": "رقم المعاملات",
+    "monthly": "شهريا",
+    "yearly": "Yearly"
   }
 }

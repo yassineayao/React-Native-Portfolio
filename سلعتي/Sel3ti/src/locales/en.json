@@ -3,6 +3,7 @@
     "login_phone_number_input": "Phone number",
     "login_password_input": "Password",
     "login_signin_btn": "Sign In",
+    "home_statistics_screen_name": "Statistics",
     "home_category_screen_name": "Category",
     "home_favorite_screen_name": "Favorite",
     "home_cart_screen_name": "Cart",
@@ -56,6 +57,14 @@
     "reclamation_compressed": "Compressed",
     "currency": "DH",
     "connection_error_msg": "Check your connection",
-    "alert_nigative_btn_txt": "Cancel"
+    "alert_nigative_btn_txt": "Cancel",
+    "welcome": "Welcome",
+    "points": "Points",
+    "month": "Month",
+    "six_month": "6 Month",
+    "year": "Year",
+    "transaction_number": "Transaction Number",
+    "monthly": "Monthly",
+    "yearly": "Yearly"
   }
 }

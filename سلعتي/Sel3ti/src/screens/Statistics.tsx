@@ -8,6 +8,7 @@ import { LineChart } from "react-native-chart-kit";
 import { DomainName } from "../constants/settings";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TSataticPoint, TUser } from "../types";
+import i18n from "../locales/i18n";
 
 // The price of one point
 const onePointPrice = 1000;
@@ -31,19 +32,19 @@ const Statistics = () => {
   const [thisMonthPoints, setThisMonthPoints] = useState(0);
   const [points, setPoints] = useState<TSataticPoint[]>([
     {
-      title: "شهر",
+      title: i18n.t("month"),
       point: thisMonthPoints,
       progress: thisMonthPoints / 100,
       style: "bg-mBox shadow-lg shadow-mBox mx-2",
     },
     {
-      title: "ستة أشهر",
+      title: i18n.t("six_month"),
       point: this6MonthPoints,
       progress: this6MonthPoints / 600,
       style: "bg-m6Box shadow-lg shadow-m6Box mx-2",
     },
     {
-      title: "سنة",
+      title: i18n.t("year"),
       point: thisYearPoints,
       progress: thisYearPoints / 1200,
       style: "bg-yBox shadow-lg shadow-yBox mx-2",
@@ -174,12 +175,14 @@ const Statistics = () => {
       <View className="flex-1 justify-center items-center">
         <View className="w-full justify-center items-center">
           <Text className="text-4xl font-bold p-3 pb-0 text-center justify-center items-center">
-            مرحبا, {userInfo?.name}
+            {i18n.t("welcome")}, {userInfo?.name}
           </Text>
         </View>
 
         <View className="w-full justify-center items-center">
-          <Text className="text-3xl m-2 px-2 w-full text-gray-500">النقط</Text>
+          <Text className="text-3xl m-2 px-2 w-full text-gray-500">
+            {i18n.t("points")}
+          </Text>
           <View className="flex-row">
             {points.map((item, index) => {
               return (
@@ -207,7 +210,7 @@ const Statistics = () => {
                     size={SIZES.width / 3 - SIZES.padding * 3}
                   />
                   <Text className="text-gray-200 p-2 w-full">
-                    عدد النقط: {item.point}
+                    {i18n.t("points")}: {item.point}
                   </Text>
                 </View>
               );
@@ -218,7 +221,8 @@ const Statistics = () => {
         <View className="p-2 bg-gray-200 rounded-t-3xl mt-2 mx-2 w-full justify-center items-center">
           <View className="w-full justify-center items-center">
             <Text className="text-3xl m-2 px-3 w-full text-gray-500">
-              رقم المعاملات(شهريا)
+              {i18n.t("transaction_number")}{" "}
+              <Text className="text-lg">({i18n.t("monthly")})</Text>
             </Text>
             <LineChart
               style={{
@@ -238,7 +242,8 @@ const Statistics = () => {
 
           <View className="w-full justify-center items-center">
             <Text className="text-3xl m-2 px-3 w-full text-gray-500">
-              رقم المعاملات السنوي
+              {i18n.t("transaction_number")}{" "}
+              <Text className="text-lg">({i18n.t("yearly")})</Text>
             </Text>
             <View
               className={`
@@ -254,7 +259,7 @@ const Statistics = () => {
               `}
             >
               <Text className="text-primary text-3xl font-bold p-2">
-                {thisYearTotal.toFixed(2)} د.م
+                {thisYearTotal.toFixed(2)} {i18n.t("currency")}
               </Text>
             </View>
           </View>
