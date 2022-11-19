@@ -2,7 +2,7 @@
  * File: Favorite.js
  * Description: Render the screen contain the list of favorite products
  */
-import React from "react";
+import React, { useEffect } from "react";
 import { FlatList, View } from "react-native";
 import { COLORS, SIZES } from "../constants/Theme";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -11,7 +11,8 @@ import { TOrderItem } from "../types";
 import SwipeableCard from "../components/SwipeableCard";
 import { useDispatch, useSelector } from "react-redux";
 import { AnyAction } from "redux";
-import { DELETE_FAVORITE } from "../redux/actions";
+import { DELETE_FAVORITE, RESTORE_FAVORITES } from "../redux/actions";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Favorites = () => {
   const favoriteProducts = useSelector(
@@ -21,6 +22,16 @@ const Favorites = () => {
   const deleteFavorite = (item: TOrderItem) =>
     dispatch({ type: DELETE_FAVORITE, payload: { favorite: item } });
 
+  useEffect(() => {
+    AsyncStorage.getItem("Favorites", (e, v) => {
+      if (v) {
+        dispatch({
+          type: RESTORE_FAVORITES,
+          payload: { favorite: JSON.parse(v) },
+        });
+      }
+    });
+  }, []);
   const renderItem = (prop: { item: TOrderItem; index: number }) => {
     return (
       <SwipeableCard

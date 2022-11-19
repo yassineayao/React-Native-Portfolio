@@ -2,7 +2,7 @@
  * File: Orders.js
  * Description: Render the Cart screen whitch contains the list of ordered products.
  */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, FlatList } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
@@ -18,7 +18,8 @@ import _ from "lodash";
 import i18n from "../locales/i18n";
 import { TOrderItem } from "../types";
 import SwipeableCard from "../components/SwipeableCard";
-import { CLEAN_CART, RMEOVE_ORDER } from "../redux/actions";
+import { CLEAN_CART, RESTORE_ORDERS, RMEOVE_ORDER } from "../redux/actions";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Cart = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -36,7 +37,15 @@ const Cart = () => {
   const deleteOrder = (item: TOrderItem) =>
     dispatch({ type: RMEOVE_ORDER, payload: { order: item } });
 
-  React.useEffect(() => {
+  useEffect(() => {
+    AsyncStorage.getItem("Cart", (e, v) => {
+      if (v) {
+        dispatch({ type: RESTORE_ORDERS, payload: { order: JSON.parse(v) } });
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     if (modalVisible) {
       const tmpInfo: TOrderItem[] = [];
       let id = 0;

@@ -3,5 +3,8 @@ export const SET_ORDER = "SET_ORDER";
 export const UPDATE_ORDER = "UPDATE_ORDER";
 export const RMEOVE_ORDER = "RMEOVE_ORDER";
 export const CLEAN_CART = "CLEAN_CART";
+export const RESTORE_ORDERS = "RESTORE_ORDERS";
+
 export const ADD_FAVORITE = "ADD_FAVORITE";
 export const DELETE_FAVORITE = "DELETE_FAVORITE";
+export const RESTORE_FAVORITES = "RESTORE_FAVORITES";
