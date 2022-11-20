@@ -16,7 +16,8 @@ import { COLORS } from "../constants/Theme";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
-import { RESTORE_FAVORITES } from "../redux/actions";
+import { restoreFavorites } from "../features/favorites/favoritesSlice";
+import { restoreOrders } from "../features/orders/ordersSlice";
 
 // create the tab navigator
 const Tab = createBottomTabNavigator();
@@ -29,10 +30,12 @@ function BottomTabs() {
   useEffect(() => {
     AsyncStorage.getItem("Favorites", (e, v) => {
       if (v) {
-        dispatch({
-          type: RESTORE_FAVORITES,
-          payload: { favorite: JSON.parse(v) },
-        });
+        dispatch(restoreFavorites(JSON.parse(v)));
+      }
+    });
+    AsyncStorage.getItem("Cart", (e, v) => {
+      if (v) {
+        dispatch(restoreOrders(JSON.parse(v)));
       }
     });
   }, []);

@@ -13,12 +13,14 @@ import i18n from "../locales/i18n";
 import { COLORS, SIZES } from "../constants/Theme";
 import { TOrderItem } from "../types";
 import {
-  ADD_FAVORITE,
-  ADD_ORDER,
-  DELETE_FAVORITE,
-  RMEOVE_ORDER,
-  UPDATE_ORDER,
-} from "../redux/actions";
+  AddFavorite,
+  removeFavorite,
+} from "../features/favorites/favoritesSlice";
+import {
+  addOrder,
+  removeOrder,
+  updateItemQuantity,
+} from "../features/orders/ordersSlice";
 
 const SwipeableCard = (prop: {
   item: TOrderItem;
@@ -44,23 +46,10 @@ const SwipeableCard = (prop: {
   );
 
   const dispatch = useDispatch();
-  const addOrder = (order: TOrderItem) =>
-    dispatch({ type: ADD_ORDER, payload: { order } });
-  const updateOrder = (order: TOrderItem) =>
-    dispatch({ type: UPDATE_ORDER, payload: { order } });
-  const removeOrder = (order: TOrderItem) =>
-    dispatch({ type: RMEOVE_ORDER, payload: { order } });
+
   const toggleFavorite = (favorite: TOrderItem) => {
-    if (isFavorite)
-      dispatch({
-        type: DELETE_FAVORITE,
-        payload: { favorite },
-      });
-    else
-      dispatch({
-        type: ADD_FAVORITE,
-        payload: { favorite },
-      });
+    if (isFavorite) dispatch(removeFavorite(favorite));
+    else dispatch(AddFavorite(favorite));
   };
 
   function handleQuantity(val: number) {
@@ -72,9 +61,9 @@ const SwipeableCard = (prop: {
       product: prop.item.product,
       quantity: val,
     };
-    if (quantity === 0) addOrder(order);
-    else if (val === 0) removeOrder(order);
-    else updateOrder(order);
+    if (quantity === 0) dispatch(addOrder(order));
+    else if (val === 0) dispatch(removeOrder(order));
+    else dispatch(updateItemQuantity(order));
   }
 
   function handleOnDelete() {

@@ -11,15 +11,14 @@ import { TOrderItem } from "../types";
 import SwipeableCard from "../components/SwipeableCard";
 import { useDispatch, useSelector } from "react-redux";
 import { AnyAction } from "redux";
-import { DELETE_FAVORITE, RESTORE_FAVORITES } from "../redux/actions";
+import { removeFavorite } from "../features/favorites/favoritesSlice";
 
 const Favorites = () => {
   const favoriteProducts = useSelector(
     (state: AnyAction) => state.favorite.items
   );
   const dispatch = useDispatch();
-  const deleteFavorite = (item: TOrderItem) =>
-    dispatch({ type: DELETE_FAVORITE, payload: { favorite: item } });
+  const deleteFavorite = (item: TOrderItem) => dispatch(removeFavorite(item));
 
   const renderItem = (prop: { item: TOrderItem; index: number }) => {
     return (

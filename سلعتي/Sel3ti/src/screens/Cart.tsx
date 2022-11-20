@@ -18,8 +18,7 @@ import _ from "lodash";
 import i18n from "../locales/i18n";
 import { TOrderItem } from "../types";
 import SwipeableCard from "../components/SwipeableCard";
-import { CLEAN_CART, RESTORE_ORDERS, RMEOVE_ORDER } from "../redux/actions";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { clearOrders, removeOrder } from "../features/orders/ordersSlice";
 
 const Cart = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -33,17 +32,8 @@ const Cart = () => {
     (state: { order: { items: TOrderItem[] } }) => state.order.items
   );
   const dispatch = useDispatch();
-  const cleanCart = () => dispatch({ type: CLEAN_CART });
-  const deleteOrder = (item: TOrderItem) =>
-    dispatch({ type: RMEOVE_ORDER, payload: { order: item } });
-
-  useEffect(() => {
-    AsyncStorage.getItem("Cart", (e, v) => {
-      if (v) {
-        dispatch({ type: RESTORE_ORDERS, payload: { order: JSON.parse(v) } });
-      }
-    });
-  }, []);
+  const cleanCart = () => dispatch(clearOrders());
+  const deleteOrder = (item: TOrderItem) => dispatch(removeOrder(item));
 
   useEffect(() => {
     if (modalVisible) {
