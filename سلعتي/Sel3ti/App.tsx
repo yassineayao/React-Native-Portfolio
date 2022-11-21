@@ -11,7 +11,6 @@ export default function App() {
       <StatusBar barStyle="dark-content" backgroundColor="white" />
       <Provider store={Store}>
         <NavigationContainer>
-          {/* <BottomTabs /> */}
           <StackNavigator />
         </NavigationContainer>
       </Provider>
