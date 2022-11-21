@@ -7,8 +7,10 @@ import * as Progress from "react-native-progress";
 import { LineChart } from "react-native-chart-kit";
 import { DomainName } from "../constants/settings";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { TSataticPoint, TUser } from "../types";
+import { TSataticPoint } from "../types";
 import i18n from "../locales/i18n";
+import { useSelector } from "react-redux";
+import { AnyAction } from "redux";
 
 // The price of one point
 const onePointPrice = 1000;
@@ -24,7 +26,7 @@ function mapPriceToPoints(price: number) {
 }
 
 const Statistics = () => {
-  const [userInfo, setUserInfo] = useState<TUser>();
+  const userInfo = useSelector((state: AnyAction) => state.user.info);
   const [numbers, setNumbers] = useState(new Array(12).fill(0));
   const [thisYearTotal, setThisYearTotal] = useState(0);
   const [thisYearPoints, setThisYearPoints] = useState(0);
@@ -175,7 +177,7 @@ const Statistics = () => {
       <View className="flex-1 justify-center items-center">
         <View className="w-full justify-center items-center">
           <Text className="text-4xl font-bold p-3 pb-0 text-center justify-center items-center">
-            {i18n.t("welcome")}, {userInfo?.name}
+            {i18n.t("welcome")}, {userInfo?.username}
           </Text>
         </View>
 

@@ -18,6 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { restoreFavorites } from "../features/favorites/favoritesSlice";
 import { restoreOrders } from "../features/orders/ordersSlice";
+import { setUser } from "../features/user/userSlice";
 
 // create the tab navigator
 const Tab = createBottomTabNavigator();
@@ -36,6 +37,11 @@ function BottomTabs() {
     AsyncStorage.getItem("Cart", (e, v) => {
       if (v) {
         dispatch(restoreOrders(JSON.parse(v)));
+      }
+    });
+    AsyncStorage.getItem("user", (e, v) => {
+      if (v) {
+        dispatch(setUser(JSON.parse(v)));
       }
     });
   }, []);
