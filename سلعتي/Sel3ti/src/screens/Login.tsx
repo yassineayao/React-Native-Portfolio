@@ -2,13 +2,14 @@
  * File: Login.js
  * Description: Render and handle the login screen
  */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   StatusBar,
   TextInput,
   TouchableOpacity,
   Text,
+  ActivityIndicator,
 } from "react-native";
 import {
   PhoneIcon,
@@ -22,20 +23,30 @@ import { DomainName } from "../constants/settings";
 import { COLORS, SIZES } from "../constants/Theme";
 import i18n from "../locales/i18n";
 import { TResponse } from "../types";
+import { getUser } from "../data/server";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Login() {
-  /**
-   * render the login screen
-   * @param navigation used to navigate between screens
-   */
-  // Credentials
   const [phoneNumber, setPhoneNumber] = useState("0676197899");
   const [password, setPassword] = useState("yassine/*-1989");
   const [isValide, setIsValid] = useState(true);
+  const [loading, setLoading] = useState(true);
+
+  const navigation = useNavigation();
 
   // Controls settings
   const [showPassword, setShowPassword] = useState(false);
   const adaptedHeight = (SIZES.height * 2) / 3;
+
+  useEffect(() => {
+    AsyncStorage.getItem("user", (e, v) => {
+      if (v) {
+        navigation.navigate("Home" as never);
+      } else {
+        setLoading(false);
+      }
+    });
+  }, []);
 
   const handlePhoneNumber = (phoneNum: string) => {
     setPhoneNumber(phoneNum);
@@ -43,6 +54,7 @@ export default function Login() {
 
   const handleLogin = (phone: string, password: string) => {
     // TODO: move this to server file
+    setLoading(true);
     fetch(DomainName + "/auth-jwt/", {
       method: "POST",
       headers: {
@@ -53,9 +65,13 @@ export default function Login() {
       .then(async (res: Response) => {
         if (res.status >= 200 && res.status <= 299) {
           const _res: TResponse = await res.json();
-          console.log(_res);
           AsyncStorage.setItem("token", _res.token);
+          getUser((info) => {
+            AsyncStorage.setItem("user", JSON.stringify(info.user));
+          });
+          navigation.navigate("Home" as never);
         } else {
+          setLoading(false);
           const msg = await res.json();
           for (const field in msg) {
             if (field === "non_field_errors")
@@ -78,6 +94,16 @@ export default function Login() {
         // TODO: Add toast messages
       });
   };
+
+  if (loading) {
+    return (
+      <ActivityIndicator
+        size={100}
+        color={COLORS.primary}
+        className="flex-1 justify-center align-center bg-white"
+      />
+    );
+  }
 
   const SafeClipPath = ClipPath as unknown as React.FunctionComponent<any>;
   return (
